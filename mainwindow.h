@@ -46,6 +46,12 @@ private slots:
 
     void on_action_About_triggered();
 
+    void on_lineEdit_vmName_editingFinished();
+
+    void on_lineEdit_ipAddr_editingFinished();
+
+    void on_action_Run_emulator_triggered();
+
 private:
     Ui::MainWindow *ui;
 };

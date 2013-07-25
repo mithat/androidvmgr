@@ -23,11 +23,17 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QMessageBox>
+#include <QDebug>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    ui->toolBtn_run->setDefaultAction(ui->action_Run_emulator);
+    ui->toolBtn_connect->setDefaultAction(ui->action_Connect);
 }
 
 MainWindow::~MainWindow()
@@ -38,6 +44,7 @@ MainWindow::~MainWindow()
 void MainWindow::on_actionPreferences_triggered()
 {
     // TODO: launch preferences dialog
+    qDebug() << "on_actionPreferences_triggered()";
 }
 
 void MainWindow::on_action_Quit_triggered()
@@ -45,12 +52,33 @@ void MainWindow::on_action_Quit_triggered()
     qApp->quit();
 }
 
+void MainWindow::on_action_Run_emulator_triggered()
+{
+    // TODO: issue QProcess: VBoxManage startvm <name-of-vm>
+    // https://qt-project.org/doc/qt-4.8/qprocess.html
+    qDebug() << "on_action_Run_emulator_triggered()";
+}
+
 void MainWindow::on_action_Connect_triggered()
 {
-    // TODO: issue system command: VBoxManage startvm <name-of-vm>
+    // TODO: issue system command: <path-to>/adm connect <ip-address>
+    qDebug() << "on_action_Connect_triggered()";
 }
 
 void MainWindow::on_action_About_triggered()
 {
-    // TODO: show about box
+    // TODO: About box strings need to go someplace better.
+    QMessageBox::about(this, tr("About AndroVM Manager"), tr("Copyright (C) 2013 Mithat Konar"));
+}
+
+void MainWindow::on_lineEdit_vmName_editingFinished()
+{
+    // TODO: Stick updated string into preferences
+    qDebug() << ui->label_vmName->text() << ": " << ui->lineEdit_vmName->text();
+}
+
+void MainWindow::on_lineEdit_ipAddr_editingFinished()
+{
+    // TODO: Stick updated string into preferences
+    qDebug() << ui->label_ipAddr->text() << ": "<< ui->lineEdit_ipAddr->text();
 }

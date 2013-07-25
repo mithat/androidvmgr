@@ -1,0 +1,57 @@
+#!/bin/bash
+
+########################################################################
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+########################################################################
+
+# Copyright (C) 2013 Mithat Konar <http://mithatkonar.com>
+
+# Nondestructively (and non-recursively) convert all files in the working
+# directory ending in ".svg" to png format.
+
+# Requires inkscape, zenity.
+
+EXT_IN=.svg
+EXT_OUT=.png
+OPTIONS=""
+
+SCRIPTNAME="$(basename $0)"
+
+# Make list of files to be processed.
+FILES=$(ls -1 *${EXT_IN} 2>/dev/null) || { zenity --title "$SCRIPTNAME" --warning --text "<b>Nothing to convert!</b>
+
+No *${EXT_IN} files found."; exit 1; }
+
+# Get confirmation from user to continue.
+zenity --title "$SCRIPTNAME" \
+  --question \
+  --text "<b>Nondestructively convert the following to PDF?</b>
+
+$FILES" || exit 1
+
+# Make a temp file to store batch commands.
+CMDFILE=$(mktemp) || { zenity --title "$SCRIPTNAME" --error --text "Error: Could not create temp file."; exit 1; }
+
+# Build up the list of commands in temp file.
+for file in $FILES
+do
+    base=$(basename $file ${EXT_IN})
+    echo "${file} --export-png=${base}${EXT_OUT}" >> $CMDFILE
+done
+
+# Process commands in a batch.
+(DISPLAY= inkscape ${OPTIONS} --shell < $CMDFILE
+rm -f $CMDFILE) | zenity --title="$SCRIPTNAME" \
+  --progress --pulsate --auto-close --auto-kill \
+  --text="Processing files ..."
