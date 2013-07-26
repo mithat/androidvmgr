@@ -33,8 +33,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    QCoreApplication::setOrganizationName("androvmgr");
-    QCoreApplication::setApplicationName("androvmgr");
+    QCoreApplication::setOrganizationName("androidvmgr");
+    QCoreApplication::setApplicationName("androidvmgr");
 //    QCoreApplication::setOrganizationDomain("mithatkonar.com");
 
     ui->setupUi(this);
@@ -108,10 +108,10 @@ void MainWindow::on_action_Connect_triggered()
 
     // set up and execute a process to start adb and connect
     QString program;
-    if (adbOnPATH)
-        program = "adb";
+    if (isAdbOnPath)
+        program = "adb";    // TODO: this should be abstracted out and conditionally compiled for different platforms
     else
-        program = adbDir + "/adb";
+        program = adbExe;
 
     QStringList arguments;
     arguments << "connect" << ui->lineEdit_ipAddr->text();
@@ -124,7 +124,7 @@ void MainWindow::on_action_Connect_triggered()
     theProcess->waitForFinished(-1);
     QString p_stdout = theProcess->readAllStandardOutput();
     if (p_stdout.isEmpty())
-        ui->statusBar->showMessage(tr("Likely problem launching adb. Is the location set?"));
+        ui->statusBar->showMessage(tr("Problem running adb. Is the location set?"));
     else
         ui->statusBar->showMessage(p_stdout);
 }
@@ -133,7 +133,13 @@ void MainWindow::on_actionDisconnect_triggered()
 {
     ui->statusBar->showMessage(tr("disconnecting..."));
 
-    QString program = adbDir + "/adb";
+    // set up and execute a process to start adb and disconnect
+    QString program;
+    if (isAdbOnPath)
+        program = "adb";    // TODO: this should be abstracted out and conditionally compiled for different platforms
+    else
+        program = adbExe;
+
     QStringList arguments;
     arguments << "disconnect" << ui->lineEdit_ipAddr->text();
 
@@ -153,7 +159,7 @@ void MainWindow::on_actionDisconnect_triggered()
 void MainWindow::on_action_About_triggered()
 {
     // TODO: About box strings need to go someplace better.
-    // TODO: License info.
+    // TODO: License info in about box.
     QMessageBox::about(this,
                        tr("About Android VM Manager"),
                        tr("Android VM Manager\n\nCopyright (C) 2013 Mithat Konar"));
@@ -172,12 +178,12 @@ void MainWindow::readSettings()
     settings.endGroup();
 
     settings.beginGroup("executables");
-    adbDir = settings.value("adb_dir").toString();
-    adbOnPATH = settings.value("adb_on_path").toBool();
+    adbExe = settings.value("adb_dir").toString();
+    isAdbOnPath = settings.value("adb_on_path").toBool();
     settings.endGroup();
 
-    qDebug() << "adbDir:\t" << adbDir;
-    qDebug() << "adbOnPath:\t" << adbOnPATH;
+    qDebug() << "adbDir:\t" << adbExe;
+    qDebug() << "adbOnPath:\t" << isAdbOnPath;
 }
 
 // Write all settings.
@@ -202,7 +208,7 @@ void MainWindow::writeSettingsExecutables()
 {
     QSettings settings;
     settings.beginGroup("executables");
-    settings.setValue("adb_dir", adbDir);
-    settings.setValue("adb_on_path", adbOnPATH);
+    settings.setValue("adb_dir", adbExe);
+    settings.setValue("adb_on_path", isAdbOnPath);
     settings.endGroup();
 }

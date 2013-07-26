@@ -1,9 +1,32 @@
+/*
+ *
+ * Copyright 2013 Mithat Konar
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ *
+ *
+ */
+
 #include "preferencesdialog.h"
 #include "ui_preferencesdialog.h"
 
 #include <QDebug>
 #include <QSettings>
 #include <QMessageBox>
+#include <QFileDialog>
 
 PreferencesDialog::PreferencesDialog(QWidget *parent) :
     QDialog(parent),
@@ -11,7 +34,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // Get settings from settings file
+    // Get settings from file and set in GUI
     QSettings settings;
     settings.beginGroup("executables");
     ui->lineEdit_path->setText(settings.value("adb_dir").toString());
@@ -46,5 +69,14 @@ void PreferencesDialog::setDirConfigState()
 
 void PreferencesDialog::on_button_browse_clicked()
 {
-    QMessageBox::warning(this, "Not implemented", "This function is not yet implemented.");
+    // TODO: Should the filter be conditionally compiled for different platforms?
+    QString adb = QFileDialog::getOpenFileName(this,
+                                               tr("Open ADB executable"),
+                                               ui->lineEdit_path->text(),
+                                               tr("ADB executable (adb adb.exe)"), 0,
+                                               QFileDialog::DontResolveSymlinks);
+    if (!adb.isNull())
+        ui->lineEdit_path->setText(adb);
+
+    qDebug() << "==> adb: " << adb;
 }

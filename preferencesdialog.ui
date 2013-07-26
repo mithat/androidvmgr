@@ -29,7 +29,7 @@
         <item>
          <widget class="QLineEdit" name="lineEdit_path">
           <property name="toolTip">
-           <string>Directory where the adb command is found (probably the SDK's platform-tools directory)</string>
+           <string>Where the adb command is located (probably the SDK's platform-tools directory)</string>
           </property>
          </widget>
         </item>
@@ -45,7 +45,7 @@
       <item>
        <widget class="QCheckBox" name="cbo_adbOnPath">
         <property name="toolTip">
-         <string>Check if your PATH is configured to include the SDK platform tools</string>
+         <string>Check this if your PATH is configured to include the SDK platform tools</string>
         </property>
         <property name="text">
          <string>ADB is on PATH</string>

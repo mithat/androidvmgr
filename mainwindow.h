@@ -57,8 +57,8 @@ private:
     Ui::MainWindow *ui;
 
     // State variables:
-    QString adbDir;     // path to directory where adb executable is.
-    bool adbOnPATH;     // true iff adb is on PATH
+    QString adbExe;     // adb executable including directory where the executable is.
+    bool isAdbOnPath;   // true iff adb is on PATH (supercedes adbExe)
     /* vmName and vmIPaddr stored in UI for now */
 
     // Service member functions:
