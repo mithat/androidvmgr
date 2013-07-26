@@ -5,6 +5,7 @@
         <file>icons/configuration_section.png</file>
         <file>icons/help-about.png</file>
         <file>icons/media-playback-start.png</file>
-        <file>icons/stock_connect.png</file>
+        <file>icons/network-offline.png</file>
+        <file>icons/network-transmit-receive.png</file>
     </qresource>
 </RCC>

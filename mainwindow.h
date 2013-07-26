@@ -24,6 +24,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QString>
 
 namespace Ui {
 class MainWindow;
@@ -38,7 +39,7 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_actionPreferences_triggered();
+    void on_action_Preferences_triggered();
 
     void on_action_Quit_triggered();
 
@@ -46,14 +47,24 @@ private slots:
 
     void on_action_About_triggered();
 
-    void on_lineEdit_vmName_editingFinished();
-
-    void on_lineEdit_ipAddr_editingFinished();
-
     void on_action_Run_emulator_triggered();
+
+    void on_actionDisconnect_triggered();
 
 private:
     Ui::MainWindow *ui;
+
+    // State variables
+    QString adbPath;    // path to directory where adb executable is.
+    /* vmName and vmIPaddr stored in UI for now */
+
+    void writeSettings();
+
+    void writeSettingsExecutables();
+
+    void writeSettingsVM();
+
+    void readSettings();
 };
 
 #endif // MAINWINDOW_H

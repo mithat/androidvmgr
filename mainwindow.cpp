@@ -25,26 +25,33 @@
 
 #include <QMessageBox>
 #include <QDebug>
+#include <QProcess>
+#include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    QCoreApplication::setOrganizationName("androvmgr");
+    QCoreApplication::setApplicationName("androvmgr");
+//    QCoreApplication::setOrganizationDomain("mithatkonar.com");
+
     ui->setupUi(this);
 
-    ui->toolBtn_run->setDefaultAction(ui->action_Run_emulator);
-    ui->toolBtn_connect->setDefaultAction(ui->action_Connect);
+    readSettings();
 }
 
 MainWindow::~MainWindow()
 {
+    writeSettings();
     delete ui;
 }
 
-void MainWindow::on_actionPreferences_triggered()
+void MainWindow::on_action_Preferences_triggered()
 {
-    // TODO: launch preferences dialog
-    qDebug() << "on_actionPreferences_triggered()";
+    // TODO: Preferences dialog
+    qDebug() << "Preferences not yet implemented. Hand edit the config file.";
+    ui->statusBar->showMessage(tr("Preferences not yet implemented. :-("));
 }
 
 void MainWindow::on_action_Quit_triggered()
@@ -54,31 +61,103 @@ void MainWindow::on_action_Quit_triggered()
 
 void MainWindow::on_action_Run_emulator_triggered()
 {
-    // TODO: issue QProcess: VBoxManage startvm <name-of-vm>
-    // https://qt-project.org/doc/qt-4.8/qprocess.html
-    qDebug() << "on_action_Run_emulator_triggered()";
+    QString program = "VBoxManage";
+    QStringList arguments;
+    arguments << "startvm" << ui->lineEdit_vmName->text();
+
+    QProcess *theProcess = new QProcess(this);
+    theProcess->start(program, arguments);
+
+    // TODO: see if process started nicely and branch as appropriate.
+    ui->statusBar->showMessage(tr("VM started"));
 }
 
 void MainWindow::on_action_Connect_triggered()
 {
-    // TODO: issue system command: <path-to>/adm connect <ip-address>
-    qDebug() << "on_action_Connect_triggered()";
+    ui->statusBar->showMessage(tr("connecting..."));
+
+    QString program = adbPath + "/adb";
+    QStringList arguments;
+    arguments << "connect" << ui->lineEdit_ipAddr->text();
+
+    QProcess *theProcess = new QProcess(this);
+    theProcess->setProcessChannelMode(QProcess::MergedChannels);
+    theProcess->start(program, arguments);
+
+    // capture standard out and show.
+    theProcess->waitForFinished(-1);
+    QString p_stdout = theProcess->readAllStandardOutput();
+    ui->statusBar->showMessage(p_stdout);
+}
+
+void MainWindow::on_actionDisconnect_triggered()
+{
+    ui->statusBar->showMessage(tr("disconnecting..."));
+
+    QString program = adbPath + "/adb";
+    QStringList arguments;
+    arguments << "disconnect" << ui->lineEdit_ipAddr->text();
+
+    QProcess *theProcess = new QProcess(this);
+    theProcess->setProcessChannelMode(QProcess::MergedChannels);
+    theProcess->start(program, arguments);
+
+    // capture standard out and show.
+    theProcess->waitForFinished(-1);
+    QString p_stdout = theProcess->readAllStandardOutput();
+    if (p_stdout == "\n")
+        ui->statusBar->showMessage(tr("disconnected"));
+    else
+        ui->statusBar->showMessage(p_stdout);
 }
 
 void MainWindow::on_action_About_triggered()
 {
     // TODO: About box strings need to go someplace better.
-    QMessageBox::about(this, tr("About AndroVM Manager"), tr("Copyright (C) 2013 Mithat Konar"));
+    // TODO: License info.
+    QMessageBox::about(this,
+                       tr("About Android VM Manager"),
+                       tr("Android VM Manager\n\nCopyright (C) 2013 Mithat Konar"));
 }
 
-void MainWindow::on_lineEdit_vmName_editingFinished()
+// Read all settings.
+void MainWindow::readSettings()
 {
-    // TODO: Stick updated string into preferences
-    qDebug() << ui->label_vmName->text() << ": " << ui->lineEdit_vmName->text();
+    QSettings settings;
+
+    settings.beginGroup("vm");
+    ui->lineEdit_vmName->setText(settings.value("name").toString());
+    ui->lineEdit_ipAddr->setText(settings.value("ip_addr").toString());
+    settings.endGroup();
+
+    settings.beginGroup("executables");
+    adbPath = settings.value("adb_path").toString();
+    settings.endGroup();
 }
 
-void MainWindow::on_lineEdit_ipAddr_editingFinished()
+// Write all settings.
+void MainWindow::writeSettings()
 {
-    // TODO: Stick updated string into preferences
-    qDebug() << ui->label_ipAddr->text() << ": "<< ui->lineEdit_ipAddr->text();
+    writeSettingsVM();
+    writeSettingsExecutables();
 }
+
+// Write settings related to Virtual Machine.
+void MainWindow::writeSettingsVM()
+{
+    QSettings settings;
+    settings.beginGroup("vm");
+    settings.setValue("name", ui->lineEdit_vmName->text());
+    settings.setValue("ip_addr", ui->lineEdit_ipAddr->text());
+    settings.endGroup();
+}
+
+// Write settings related to executables.
+void MainWindow::writeSettingsExecutables()
+{
+    QSettings settings;
+    settings.beginGroup("executables");
+    settings.setValue("adb_path", adbPath);
+    settings.endGroup();
+}
+
