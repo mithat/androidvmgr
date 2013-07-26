@@ -162,7 +162,7 @@ void MainWindow::on_action_About_triggered()
     // TODO: License info in about box.
     QMessageBox::about(this,
                        tr("About Android VM Manager"),
-                       tr("Android VM Manager\n\nCopyright (C) 2013 Mithat Konar"));
+                       tr("Android VM Manager\n\nCopyright (C) 2013 Mithat Konar\nLicensed under GPLv3"));
 }
 
 //==== Settings ====//
