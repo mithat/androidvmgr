@@ -7,5 +7,6 @@
         <file>icons/media-playback-start.png</file>
         <file>icons/network-offline.png</file>
         <file>icons/network-transmit-receive.png</file>
+        <file>icons/info.png</file>
     </qresource>
 </RCC>

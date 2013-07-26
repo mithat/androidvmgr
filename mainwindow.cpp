@@ -22,6 +22,7 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "preferencesdialog.h"
 
 #include <QMessageBox>
 #include <QDebug>
@@ -47,11 +48,19 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+//==== Actions ====//
+
 void MainWindow::on_action_Preferences_triggered()
 {
-    // TODO: Preferences dialog
-    qDebug() << "Preferences not yet implemented. Hand edit the config file.";
-    ui->statusBar->showMessage(tr("Preferences not yet implemented. :-("));
+    // Show preferences dialog, record changes in settings file
+    PreferencesDialog preferencesDialog(this);
+    preferencesDialog.setModal(true);
+    preferencesDialog.exec();
+
+    // Reset app settings from file
+    readSettings();
+
+    ui->statusBar->showMessage(tr("Preferences saved"));
 }
 
 void MainWindow::on_action_Quit_triggered()
@@ -68,15 +77,42 @@ void MainWindow::on_action_Run_emulator_triggered()
     QProcess *theProcess = new QProcess(this);
     theProcess->start(program, arguments);
 
-    // TODO: see if process started nicely and branch as appropriate.
-    ui->statusBar->showMessage(tr("VM started"));
+    theProcess->waitForFinished(-1);
+    if (theProcess->exitCode() == 0)
+        ui->statusBar->showMessage(tr("VM started"));
+    else
+        ui->statusBar->showMessage(tr("Problem starting VM. Is it already running?"));
+}
+
+void MainWindow::on_actionVM_info_triggered()
+{
+    // Ask VBoxManage for a available VM properties.
+    QString program = "VBoxManage";
+    QStringList arguments;
+    arguments << "guestproperty" << "enumerate" << ui->lineEdit_vmName->text();
+
+    QProcess *theProcess = new QProcess(this);
+    theProcess->setProcessChannelMode(QProcess::MergedChannels);
+    theProcess->start(program, arguments);
+    theProcess->waitForFinished(-1);
+    QString p_stdout = theProcess->readAllStandardOutput();
+
+    // Report results
+    // TODO: Custom dialog that makes VM info less ugly.
+    QMessageBox::information(this, tr("VM info"), p_stdout);
 }
 
 void MainWindow::on_action_Connect_triggered()
 {
     ui->statusBar->showMessage(tr("connecting..."));
 
-    QString program = adbPath + "/adb";
+    // set up and execute a process to start adb and connect
+    QString program;
+    if (adbOnPATH)
+        program = "adb";
+    else
+        program = adbDir + "/adb";
+
     QStringList arguments;
     arguments << "connect" << ui->lineEdit_ipAddr->text();
 
@@ -87,14 +123,17 @@ void MainWindow::on_action_Connect_triggered()
     // capture standard out and show.
     theProcess->waitForFinished(-1);
     QString p_stdout = theProcess->readAllStandardOutput();
-    ui->statusBar->showMessage(p_stdout);
+    if (p_stdout.isEmpty())
+        ui->statusBar->showMessage(tr("Likely problem launching adb. Is the location set?"));
+    else
+        ui->statusBar->showMessage(p_stdout);
 }
 
 void MainWindow::on_actionDisconnect_triggered()
 {
     ui->statusBar->showMessage(tr("disconnecting..."));
 
-    QString program = adbPath + "/adb";
+    QString program = adbDir + "/adb";
     QStringList arguments;
     arguments << "disconnect" << ui->lineEdit_ipAddr->text();
 
@@ -120,6 +159,8 @@ void MainWindow::on_action_About_triggered()
                        tr("Android VM Manager\n\nCopyright (C) 2013 Mithat Konar"));
 }
 
+//==== Settings ====//
+
 // Read all settings.
 void MainWindow::readSettings()
 {
@@ -131,8 +172,12 @@ void MainWindow::readSettings()
     settings.endGroup();
 
     settings.beginGroup("executables");
-    adbPath = settings.value("adb_path").toString();
+    adbDir = settings.value("adb_dir").toString();
+    adbOnPATH = settings.value("adb_on_path").toBool();
     settings.endGroup();
+
+    qDebug() << "adbDir:\t" << adbDir;
+    qDebug() << "adbOnPath:\t" << adbOnPATH;
 }
 
 // Write all settings.
@@ -157,7 +202,7 @@ void MainWindow::writeSettingsExecutables()
 {
     QSettings settings;
     settings.beginGroup("executables");
-    settings.setValue("adb_path", adbPath);
+    settings.setValue("adb_dir", adbDir);
+    settings.setValue("adb_on_path", adbOnPATH);
     settings.endGroup();
 }
-

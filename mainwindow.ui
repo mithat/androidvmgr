@@ -28,7 +28,7 @@
        <item>
         <widget class="QLineEdit" name="lineEdit_ipAddr">
          <property name="toolTip">
-          <string>IP address of the AndroVM emulator (e.g., 192.168.56.101)</string>
+          <string>IP address of the virtual machine (e.g., 192.168.56.101)</string>
          </property>
         </widget>
        </item>
@@ -67,6 +67,7 @@
      <string>&amp;File</string>
     </property>
     <addaction name="action_Run_emulator"/>
+    <addaction name="actionVM_info"/>
     <addaction name="action_Connect"/>
     <addaction name="actionDisconnect"/>
     <addaction name="separator"/>
@@ -96,6 +97,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="action_Run_emulator"/>
+   <addaction name="actionVM_info"/>
    <addaction name="separator"/>
    <addaction name="action_Connect"/>
    <addaction name="actionDisconnect"/>
@@ -132,7 +134,7 @@
      <normaloff>:/icons/icons/help-about.png</normaloff>:/icons/icons/help-about.png</iconset>
    </property>
    <property name="text">
-    <string>About</string>
+    <string>&amp;About</string>
    </property>
   </action>
   <action name="action_Run_emulator">
@@ -141,7 +143,7 @@
      <normaloff>:/icons/icons/media-playback-start.png</normaloff>:/icons/icons/media-playback-start.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Start emulator</string>
+    <string>&amp;Start VM</string>
    </property>
    <property name="toolTip">
     <string>Start virtual machine emulator</string>
@@ -156,7 +158,7 @@
      <normaloff>:/icons/icons/network-transmit-receive.png</normaloff>:/icons/icons/network-transmit-receive.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Connect to ADB</string>
+    <string>&amp;Connect</string>
    </property>
    <property name="toolTip">
     <string>Connect virtual machine to ADB</string>
@@ -171,13 +173,28 @@
      <normaloff>:/icons/icons/network-offline.png</normaloff>:/icons/icons/network-offline.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Disconnect from ADB</string>
+    <string>&amp;Disconnect</string>
    </property>
    <property name="toolTip">
     <string>Disconnect virtual machine from ADB</string>
    </property>
    <property name="shortcut">
     <string>F9</string>
+   </property>
+  </action>
+  <action name="actionVM_info">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/info.png</normaloff>:/icons/icons/info.png</iconset>
+   </property>
+   <property name="text">
+    <string>VM &amp;info</string>
+   </property>
+   <property name="toolTip">
+    <string>Information about the virtual machine. (VM must be running.)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
    </property>
   </action>
  </widget>

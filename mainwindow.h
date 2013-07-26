@@ -51,13 +51,17 @@ private slots:
 
     void on_actionDisconnect_triggered();
 
+    void on_actionVM_info_triggered();
+
 private:
     Ui::MainWindow *ui;
 
-    // State variables
-    QString adbPath;    // path to directory where adb executable is.
+    // State variables:
+    QString adbDir;     // path to directory where adb executable is.
+    bool adbOnPATH;     // true iff adb is on PATH
     /* vmName and vmIPaddr stored in UI for now */
 
+    // Service member functions:
     void writeSettings();
 
     void writeSettingsExecutables();
