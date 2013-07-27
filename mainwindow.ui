@@ -188,7 +188,7 @@
      <normaloff>:/icons/icons/info.png</normaloff>:/icons/icons/info.png</iconset>
    </property>
    <property name="text">
-    <string>VM &amp;info</string>
+    <string>VM &amp;info...</string>
    </property>
    <property name="toolTip">
     <string>Information about the virtual machine. (VM should be running.)</string>

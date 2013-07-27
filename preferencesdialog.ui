@@ -29,7 +29,7 @@
         <item>
          <widget class="QLineEdit" name="lineEdit_path">
           <property name="toolTip">
-           <string>Where the adb command is located (probably the SDK's platform-tools directory)</string>
+           <string>Where the adb command is located (in the SDK's platform-tools directory)</string>
           </property>
          </widget>
         </item>

@@ -77,6 +77,4 @@ void PreferencesDialog::on_button_browse_clicked()
                                                QFileDialog::DontResolveSymlinks);
     if (!adb.isNull())
         ui->lineEdit_path->setText(adb);
-
-    qDebug() << "==> adb: " << adb;
 }
