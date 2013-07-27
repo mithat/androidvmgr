@@ -29,6 +29,9 @@
 #include <QProcess>
 #include <QSettings>
 
+//TODO: Do STATUSBAR_TIMEOOUT in a less kludgey way.
+#define STATUSBAR_TIMEOUT 8000
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -60,7 +63,7 @@ void MainWindow::on_action_Preferences_triggered()
     // Reset app settings from file
     readSettings();
 
-    ui->statusBar->showMessage(tr("Preferences saved"));
+    ui->statusBar->showMessage(tr("Preferences saved"), STATUSBAR_TIMEOUT);
 }
 
 void MainWindow::on_action_Quit_triggered()
@@ -79,7 +82,7 @@ void MainWindow::on_action_Run_emulator_triggered()
 
     theProcess->waitForFinished(-1);
     if (theProcess->exitCode() == 0)
-        ui->statusBar->showMessage(tr("VM started"));
+        ui->statusBar->showMessage(tr("VM started"), STATUSBAR_TIMEOUT);
     else
         ui->statusBar->showMessage(tr("Problem starting VM. Is it already running?"));
 }
@@ -126,7 +129,7 @@ void MainWindow::on_action_Connect_triggered()
     if (p_stdout.isEmpty())
         ui->statusBar->showMessage(tr("Problem running adb. Is the location set?"));
     else
-        ui->statusBar->showMessage(p_stdout);
+        ui->statusBar->showMessage(p_stdout, STATUSBAR_TIMEOUT);
 }
 
 void MainWindow::on_actionDisconnect_triggered()
@@ -151,7 +154,7 @@ void MainWindow::on_actionDisconnect_triggered()
     theProcess->waitForFinished(-1);
     QString p_stdout = theProcess->readAllStandardOutput();
     if (p_stdout == "\n")
-        ui->statusBar->showMessage(tr("disconnected"));
+        ui->statusBar->showMessage(tr("disconnected"), STATUSBAR_TIMEOUT);
     else
         ui->statusBar->showMessage(p_stdout);
 }
@@ -181,9 +184,6 @@ void MainWindow::readSettings()
     adbExe = settings.value("adb_dir").toString();
     isAdbOnPath = settings.value("adb_on_path").toBool();
     settings.endGroup();
-
-    qDebug() << "adbDir:\t" << adbExe;
-    qDebug() << "adbOnPath:\t" << isAdbOnPath;
 }
 
 // Write all settings.

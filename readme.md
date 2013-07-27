@@ -13,7 +13,7 @@ Android VM Manager is developed with [Qt 5.1](https://qt-project.org/doc/qt-5.1/
 Quickstart
 -----------
 ###Configuration
-#### Set the location of the `adb` executable
+#### Set the location of the adb executable
 Start Android VM Manager and go to _Edit > Preferences..._. If you added the `platform-tools` directory to your `PATH` during installation of the Android SDK (or ADT), then check "ADB is on PATH" and you're done. If not, then use the "Browse" button to tell Android VM Manager where the `adb` executable is. (As of this writing, it's in `<Android-SDK-directory>/platform-tools`.) 
 
 #### Set the name of the VM
