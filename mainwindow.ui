@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>303</width>
+    <width>365</width>
     <height>232</height>
    </rect>
   </property>
@@ -58,7 +58,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>303</width>
+     <width>365</width>
      <height>19</height>
     </rect>
    </property>
@@ -67,7 +67,9 @@
      <string>&amp;File</string>
     </property>
     <addaction name="action_Run_emulator"/>
+    <addaction name="actionACPI_shutdown"/>
     <addaction name="actionVM_info"/>
+    <addaction name="separator"/>
     <addaction name="action_Connect"/>
     <addaction name="actionDisconnect"/>
     <addaction name="separator"/>
@@ -97,7 +99,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="action_Run_emulator"/>
-   <addaction name="actionVM_info"/>
+   <addaction name="actionACPI_shutdown"/>
    <addaction name="separator"/>
    <addaction name="action_Connect"/>
    <addaction name="actionDisconnect"/>
@@ -195,6 +197,21 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+I</string>
+   </property>
+  </action>
+  <action name="actionACPI_shutdown">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/media-playback-stop.png</normaloff>:/icons/icons/media-playback-stop.png</iconset>
+   </property>
+   <property name="text">
+    <string>ACPI s&amp;hutdown</string>
+   </property>
+   <property name="toolTip">
+    <string>Send ACPI shutdown signal to virtual machine</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+H</string>
    </property>
   </action>
  </widget>

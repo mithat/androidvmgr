@@ -29,6 +29,10 @@
 #include <QProcess>
 #include <QSettings>
 
+//TODO: Rename actions to be consistent regarding underscores
+//TODO: Add "Machine" or similar menu to take Start, Shutdown, Connect, etc.?
+//TODO: Doxygen comment functions.
+
 //TODO: Do STATUSBAR_TIMEOOUT in a less kludgey way.
 #define STATUSBAR_TIMEOUT 8000
 
@@ -85,6 +89,22 @@ void MainWindow::on_action_Run_emulator_triggered()
         ui->statusBar->showMessage(tr("VM started"), STATUSBAR_TIMEOUT);
     else
         ui->statusBar->showMessage(tr("Problem starting VM. Is it already running?"));
+}
+
+void MainWindow::on_actionACPI_shutdown_triggered()
+{
+    QString program = "VBoxManage";
+    QStringList arguments;
+    arguments << "controlvm" << ui->lineEdit_vmName->text() << "acpipowerbutton";
+
+    QProcess *theProcess = new QProcess(this);
+    theProcess->start(program, arguments);
+
+    theProcess->waitForFinished(-1);
+    if (theProcess->exitCode() == 0)
+        ui->statusBar->showMessage(tr("Shutdown signal sent to VM"), STATUSBAR_TIMEOUT);
+    else
+        ui->statusBar->showMessage(tr("Problem sending shutdown signal. Is VM running?"));
 }
 
 void MainWindow::on_actionVM_info_triggered()
@@ -162,7 +182,7 @@ void MainWindow::on_actionDisconnect_triggered()
 void MainWindow::on_action_About_triggered()
 {
     // TODO: About box strings need to go someplace better.
-    // TODO: License info in about box.
+    // TDOD: Version info into About box
     QMessageBox::about(this,
                        tr("About Android VM Manager"),
                        tr("Android VM Manager\n\nCopyright (C) 2013 Mithat Konar\nLicensed under GPLv3"));

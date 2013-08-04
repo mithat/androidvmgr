@@ -8,5 +8,7 @@
         <file>icons/network-offline.png</file>
         <file>icons/network-transmit-receive.png</file>
         <file>icons/info.png</file>
+        <file>icons/media-playback-stop.png</file>
+        <file>icons/process-stop.png</file>
     </qresource>
 </RCC>
