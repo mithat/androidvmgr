@@ -31,7 +31,6 @@
 
 //TODO: Rename actions to be consistent regarding underscores
 //TODO: Add "Machine" or similar menu to take Start, Shutdown, Connect, etc.
-//TODO: Add saving of window size to settings.
 
 //TODO: Do STATUSBAR_TIMEOUT in a less kludgey way.
 #define STATUSBAR_TIMEOUT 8000
@@ -239,6 +238,11 @@ void MainWindow::readSettings()
     adbExe = settings.value("adb_dir").toString();
     isAdbOnPath = settings.value("adb_on_path").toBool();
     settings.endGroup();
+
+    settings.beginGroup("mainwindow");
+    restoreGeometry(settings.value("geometry").toByteArray());
+    restoreState(settings.value("windowState").toByteArray());
+    settings.endGroup();
 }
 
 /**
@@ -248,6 +252,7 @@ void MainWindow::writeSettings()
 {
     writeSettingsVM();
     writeSettingsExecutables();
+    writeWindowGeometry();
 }
 
 /**
@@ -271,5 +276,17 @@ void MainWindow::writeSettingsExecutables()
     settings.beginGroup("executables");
     settings.setValue("adb_dir", adbExe);
     settings.setValue("adb_on_path", isAdbOnPath);
+    settings.endGroup();
+}
+
+/**
+ * @brief Write settings related to this window's geometry.
+ */
+void MainWindow::writeWindowGeometry()
+{
+    QSettings settings;
+    settings.beginGroup("mainwindow");
+    settings.setValue("geometry", saveGeometry());
+    settings.setValue("windowState", saveState());
     settings.endGroup();
 }

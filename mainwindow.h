@@ -73,6 +73,8 @@ private:
 
     void writeSettingsVM();
 
+    void writeWindowGeometry();
+
     void readSettings();
 };
 
