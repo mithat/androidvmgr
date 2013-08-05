@@ -181,11 +181,13 @@ void MainWindow::on_actionDisconnect_triggered()
 
 void MainWindow::on_action_About_triggered()
 {
-    // TODO: About box strings need to go someplace better.
-    // TDOD: Version info into About box
+    // TODO: About box strings should go someplace better.
     QMessageBox::about(this,
                        tr("About Android VM Manager"),
-                       tr("Android VM Manager\n\nCopyright (C) 2013 Mithat Konar\nLicensed under GPLv3"));
+                       "<b>" + tr("Android VM Manager") + " " + VER + "</b><br />" +
+                       "<br />" +
+                       tr("Copyright (C) 2013 Mithat Konar") + "<br />" +
+                       tr("Licensed under the <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">GPLv3</a>."));
 }
 
 //==== Settings ====//

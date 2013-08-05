@@ -29,6 +29,10 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = androidvmgr
 TEMPLATE = app
 
+# from: http://www.qtcentre.org/wiki/index.php?title=Version_numbering_using_QMake
+VERSION = 0.1.1
+VERSTR = '\\"$${VERSION}\\"'  # place quotes around the version string
+DEFINES += VER=\"$${VERSTR}\" # create a VER macro containing the version string
 
 SOURCES += main.cpp\
         mainwindow.cpp \
