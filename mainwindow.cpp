@@ -29,10 +29,9 @@
 #include <QProcess>
 #include <QSettings>
 
-//TODO: Rename actions to be consistent regarding underscores
-//TODO: Add "Machine" or similar menu to take Start, Shutdown, Connect, etc.
-
-//TODO: Do STATUSBAR_TIMEOUT in a less kludgey way.
+// TODO: Rename actions to be consistent regarding underscores.
+// TODO: Convert UI "VM Name" lineEdit to auto-populated menu of some sort.
+// TODO: Do STATUSBAR_TIMEOUT in a less kludgey way.
 #define STATUSBAR_TIMEOUT 8000
 
 /**

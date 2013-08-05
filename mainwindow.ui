@@ -66,12 +66,6 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
-    <addaction name="action_Run_emulator"/>
-    <addaction name="actionACPI_shutdown"/>
-    <addaction name="actionVM_info"/>
-    <addaction name="separator"/>
-    <addaction name="action_Connect"/>
-    <addaction name="actionDisconnect"/>
     <addaction name="separator"/>
     <addaction name="action_Quit"/>
    </widget>
@@ -87,8 +81,20 @@
     </property>
     <addaction name="action_About"/>
    </widget>
+   <widget class="QMenu" name="menu_Machine">
+    <property name="title">
+     <string>&amp;Machine</string>
+    </property>
+    <addaction name="action_Run_emulator"/>
+    <addaction name="actionACPI_shutdown"/>
+    <addaction name="action_Connect"/>
+    <addaction name="actionDisconnect"/>
+    <addaction name="separator"/>
+    <addaction name="actionVM_info"/>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Edit"/>
+   <addaction name="menu_Machine"/>
    <addaction name="menu_Help"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -151,7 +157,7 @@
     <string>Start virtual machine emulator</string>
    </property>
    <property name="shortcut">
-    <string>F11</string>
+    <string>Ctrl+R</string>
    </property>
   </action>
   <action name="action_Connect">
@@ -166,7 +172,7 @@
     <string>Connect virtual machine to ADB</string>
    </property>
    <property name="shortcut">
-    <string>F12</string>
+    <string>F11</string>
    </property>
   </action>
   <action name="actionDisconnect">
@@ -181,7 +187,7 @@
     <string>Disconnect virtual machine from ADB</string>
    </property>
    <property name="shortcut">
-    <string>F9</string>
+    <string>F12</string>
    </property>
   </action>
   <action name="actionVM_info">
