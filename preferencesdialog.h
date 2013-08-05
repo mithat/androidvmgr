@@ -29,6 +29,9 @@ namespace Ui {
 class PreferencesDialog;
 }
 
+/**
+ * @brief The app's preferences dialog box.
+ */
 class PreferencesDialog : public QDialog
 {
     Q_OBJECT

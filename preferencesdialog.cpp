@@ -28,6 +28,10 @@
 #include <QMessageBox>
 #include <QFileDialog>
 
+/**
+ * @brief constructor
+ * @param parent  The window's parent (Qwidget*)
+ */
 PreferencesDialog::PreferencesDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PreferencesDialog)
@@ -45,14 +49,19 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     setDirConfigState();
 }
 
+/**
+ * @brief deconstructor
+ */
 PreferencesDialog::~PreferencesDialog()
 {
     delete ui;
 }
 
+/**
+ * @brief Write new settings to config file.
+ */
 void PreferencesDialog::on_buttonBox_accepted()
 {
-    // write new settings to config file
     QSettings settings;
     settings.beginGroup("executables");
     settings.setValue("adb_dir", ui->lineEdit_path->text());
@@ -60,6 +69,10 @@ void PreferencesDialog::on_buttonBox_accepted()
     settings.endGroup();
 }
 
+/**
+ * @brief Enable/disable the dialog's adb path browsing to
+ *        reflect the state of the "on PATH" checkbox.
+ */
 void PreferencesDialog::setDirConfigState()
 {
     bool checkState = ui->cbo_adbOnPath->isChecked();
@@ -67,6 +80,9 @@ void PreferencesDialog::setDirConfigState()
     ui->lineEdit_path->setDisabled(checkState);
 }
 
+/**
+ * @brief Open a file browser to set the adb path.
+ */
 void PreferencesDialog::on_button_browse_clicked()
 {
     // TODO: Should the filter be conditionally compiled for different platforms?

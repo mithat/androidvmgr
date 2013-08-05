@@ -30,12 +30,16 @@
 #include <QSettings>
 
 //TODO: Rename actions to be consistent regarding underscores
-//TODO: Add "Machine" or similar menu to take Start, Shutdown, Connect, etc.?
-//TODO: Doxygen comment functions.
+//TODO: Add "Machine" or similar menu to take Start, Shutdown, Connect, etc.
+//TODO: Add saving of window size to settings.
 
-//TODO: Do STATUSBAR_TIMEOOUT in a less kludgey way.
+//TODO: Do STATUSBAR_TIMEOUT in a less kludgey way.
 #define STATUSBAR_TIMEOUT 8000
 
+/**
+ * @brief constructor
+ * @param parent  The window's parent (Qwidget*)
+ */
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -49,6 +53,9 @@ MainWindow::MainWindow(QWidget *parent) :
     readSettings();
 }
 
+/**
+ * @brief deconstructor
+ */
 MainWindow::~MainWindow()
 {
     writeSettings();
@@ -57,6 +64,17 @@ MainWindow::~MainWindow()
 
 //==== Actions ====//
 
+/**
+ * @brief Exit the app.
+ */
+void MainWindow::on_action_Quit_triggered()
+{
+    qApp->quit();
+}
+
+/**
+ * @brief Display a dialog box that allows app preferences to be set.
+ */
 void MainWindow::on_action_Preferences_triggered()
 {
     // Show preferences dialog, record changes in settings file
@@ -70,11 +88,9 @@ void MainWindow::on_action_Preferences_triggered()
     ui->statusBar->showMessage(tr("Preferences saved"), STATUSBAR_TIMEOUT);
 }
 
-void MainWindow::on_action_Quit_triggered()
-{
-    qApp->quit();
-}
-
+/**
+ * @brief Start the VM.
+ */
 void MainWindow::on_action_Run_emulator_triggered()
 {
     QString program = "VBoxManage";
@@ -91,6 +107,9 @@ void MainWindow::on_action_Run_emulator_triggered()
         ui->statusBar->showMessage(tr("Problem starting VM. Is it already running?"));
 }
 
+/**
+ * @brief Send the 'acpipowerbutton" signal to the VM.
+ */
 void MainWindow::on_actionACPI_shutdown_triggered()
 {
     QString program = "VBoxManage";
@@ -107,6 +126,9 @@ void MainWindow::on_actionACPI_shutdown_triggered()
         ui->statusBar->showMessage(tr("Problem sending shutdown signal. Is VM running?"));
 }
 
+/**
+ * @brief Display a dialog that shows information about the VM.
+ */
 void MainWindow::on_actionVM_info_triggered()
 {
     // Ask VBoxManage for a available VM properties.
@@ -125,6 +147,9 @@ void MainWindow::on_actionVM_info_triggered()
     QMessageBox::information(this, tr("VM info"), p_stdout);
 }
 
+/**
+ * @brief Connect the VM to the ADB.
+ */
 void MainWindow::on_action_Connect_triggered()
 {
     ui->statusBar->showMessage(tr("connecting..."));
@@ -152,6 +177,9 @@ void MainWindow::on_action_Connect_triggered()
         ui->statusBar->showMessage(p_stdout, STATUSBAR_TIMEOUT);
 }
 
+/**
+ * @brief Disconnect the VM from the ADB.
+ */
 void MainWindow::on_actionDisconnect_triggered()
 {
     ui->statusBar->showMessage(tr("disconnecting..."));
@@ -179,6 +207,9 @@ void MainWindow::on_actionDisconnect_triggered()
         ui->statusBar->showMessage(p_stdout);
 }
 
+/**
+ * @brief Display a dialog that shows information about this app.
+ */
 void MainWindow::on_action_About_triggered()
 {
     // TODO: About box strings should go someplace better.
@@ -192,7 +223,9 @@ void MainWindow::on_action_About_triggered()
 
 //==== Settings ====//
 
-// Read all settings.
+/**
+ * @brief Read all settings.
+ */
 void MainWindow::readSettings()
 {
     QSettings settings;
@@ -208,14 +241,18 @@ void MainWindow::readSettings()
     settings.endGroup();
 }
 
-// Write all settings.
+/**
+ * @brief Write all settings.
+ */
 void MainWindow::writeSettings()
 {
     writeSettingsVM();
     writeSettingsExecutables();
 }
 
-// Write settings related to Virtual Machine.
+/**
+ * @brief Write settings related to Virtual Machine.
+ */
 void MainWindow::writeSettingsVM()
 {
     QSettings settings;
@@ -225,7 +262,9 @@ void MainWindow::writeSettingsVM()
     settings.endGroup();
 }
 
-// Write settings related to executables.
+/**
+  * @brief Write settings related to executables.
+  */
 void MainWindow::writeSettingsExecutables()
 {
     QSettings settings;
