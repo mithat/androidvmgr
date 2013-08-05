@@ -76,6 +76,12 @@ private:
     void writeWindowGeometry();
 
     void readSettings();
+
+    void readSettingsVM();
+
+    void readSettingsExecutables();
+
+    void readSettingsGeometry();
 };
 
 #endif // MAINWINDOW_H

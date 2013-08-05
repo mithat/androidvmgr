@@ -81,8 +81,8 @@ void MainWindow::on_action_Preferences_triggered()
     preferencesDialog.setModal(true);
     preferencesDialog.exec();
 
-    // Reset app settings from file
-    readSettings();
+    // Reset settings group(s) changed in dialog from file
+    readSettingsExecutables();
 
     ui->statusBar->showMessage(tr("Preferences saved"), STATUSBAR_TIMEOUT);
 }
@@ -223,29 +223,6 @@ void MainWindow::on_action_About_triggered()
 //==== Settings ====//
 
 /**
- * @brief Read all settings.
- */
-void MainWindow::readSettings()
-{
-    QSettings settings;
-
-    settings.beginGroup("vm");
-    ui->lineEdit_vmName->setText(settings.value("name").toString());
-    ui->lineEdit_ipAddr->setText(settings.value("ip_addr").toString());
-    settings.endGroup();
-
-    settings.beginGroup("executables");
-    adbExe = settings.value("adb_dir").toString();
-    isAdbOnPath = settings.value("adb_on_path").toBool();
-    settings.endGroup();
-
-    settings.beginGroup("mainwindow");
-    restoreGeometry(settings.value("geometry").toByteArray());
-    restoreState(settings.value("windowState").toByteArray());
-    settings.endGroup();
-}
-
-/**
  * @brief Write all settings.
  */
 void MainWindow::writeSettings()
@@ -288,5 +265,54 @@ void MainWindow::writeWindowGeometry()
     settings.beginGroup("mainwindow");
     settings.setValue("geometry", saveGeometry());
     settings.setValue("windowState", saveState());
+    settings.endGroup();
+}
+
+/**
+ * @brief Read all settings.
+ */
+void MainWindow::readSettings()
+{
+    readSettingsVM();
+    readSettingsExecutables();
+    readSettingsGeometry();
+}
+
+/**
+ * @brief Read settings related to Virtual Machine.
+ */
+void MainWindow::readSettingsVM()
+{
+    QSettings settings;
+
+    settings.beginGroup("vm");
+    ui->lineEdit_vmName->setText(settings.value("name").toString());
+    ui->lineEdit_ipAddr->setText(settings.value("ip_addr").toString());
+    settings.endGroup();
+}
+
+/**
+ * @brief Read settings related to executables.
+ */
+void MainWindow::readSettingsExecutables()
+{
+    QSettings settings;
+
+    settings.beginGroup("executables");
+    adbExe = settings.value("adb_dir").toString();
+    isAdbOnPath = settings.value("adb_on_path").toBool();
+    settings.endGroup();
+}
+
+/**
+ * @brief Read settings related to this window's geometry.
+ */
+void MainWindow::readSettingsGeometry()
+{
+    QSettings settings;
+
+    settings.beginGroup("mainwindow");
+    restoreGeometry(settings.value("geometry").toByteArray());
+    restoreState(settings.value("windowState").toByteArray());
     settings.endGroup();
 }
