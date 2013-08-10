@@ -42,21 +42,21 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_action_Quit_triggered();
+    void on_actionQuit_triggered();
 
-    void on_action_About_triggered();
-
-    void on_action_Run_emulator_triggered();
+    void on_actionRun_emulator_triggered();
 
     void on_actionACPI_shutdown_triggered();
 
-    void on_action_Connect_triggered();
+    void on_actionConnect_triggered();
 
     void on_actionDisconnect_triggered();
 
     void on_actionVM_info_triggered();
 
-    void on_action_Preferences_triggered();
+    void on_actionPreferences_triggered();
+
+    void on_actionAbout_triggered();
 
 private:
     Ui::MainWindow *ui;

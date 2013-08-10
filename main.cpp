@@ -26,6 +26,9 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    QCoreApplication::setOrganizationName("androidvmgr");
+    QCoreApplication::setApplicationName("androidvmgr");
+//    QCoreApplication::setOrganizationDomain("mithatkonar.com");
     MainWindow w;
     w.show();
     

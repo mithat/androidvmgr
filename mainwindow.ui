@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>370</width>
-    <height>230</height>
+    <width>307</width>
+    <height>225</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -58,7 +58,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>370</width>
+     <width>307</width>
      <height>19</height>
     </rect>
    </property>
@@ -67,27 +67,27 @@
      <string>&amp;File</string>
     </property>
     <addaction name="separator"/>
-    <addaction name="action_Quit"/>
+    <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menu_Edit">
     <property name="title">
      <string>&amp;Edit</string>
     </property>
-    <addaction name="action_Preferences"/>
+    <addaction name="actionPreferences"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
      <string>&amp;Help</string>
     </property>
-    <addaction name="action_About"/>
+    <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menu_Machine">
     <property name="title">
      <string>&amp;Machine</string>
     </property>
-    <addaction name="action_Run_emulator"/>
+    <addaction name="actionRun_emulator"/>
     <addaction name="actionACPI_shutdown"/>
-    <addaction name="action_Connect"/>
+    <addaction name="actionConnect"/>
     <addaction name="actionDisconnect"/>
     <addaction name="separator"/>
     <addaction name="actionVM_info"/>
@@ -104,18 +104,18 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="action_Run_emulator"/>
+   <addaction name="actionRun_emulator"/>
    <addaction name="actionACPI_shutdown"/>
    <addaction name="separator"/>
-   <addaction name="action_Connect"/>
+   <addaction name="actionConnect"/>
    <addaction name="actionDisconnect"/>
    <addaction name="separator"/>
-   <addaction name="action_Preferences"/>
+   <addaction name="actionPreferences"/>
    <addaction name="separator"/>
-   <addaction name="action_Quit"/>
+   <addaction name="actionQuit"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="action_Quit">
+  <action name="actionQuit">
    <property name="icon">
     <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/application-exit.png</normaloff>:/icons/icons/application-exit.png</iconset>
@@ -127,7 +127,7 @@
     <string>Ctrl+Q</string>
    </property>
   </action>
-  <action name="action_Preferences">
+  <action name="actionPreferences">
    <property name="icon">
     <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/configuration_section.png</normaloff>:/icons/icons/configuration_section.png</iconset>
@@ -136,7 +136,7 @@
     <string>&amp;Preferences...</string>
    </property>
   </action>
-  <action name="action_About">
+  <action name="actionAbout">
    <property name="icon">
     <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/help-about.png</normaloff>:/icons/icons/help-about.png</iconset>
@@ -145,7 +145,7 @@
     <string>&amp;About</string>
    </property>
   </action>
-  <action name="action_Run_emulator">
+  <action name="actionRun_emulator">
    <property name="icon">
     <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/media-playback-start.png</normaloff>:/icons/icons/media-playback-start.png</iconset>
@@ -154,13 +154,13 @@
     <string>&amp;Start VM</string>
    </property>
    <property name="toolTip">
-    <string>Start virtual machine emulator</string>
+    <string>Start virtual machine emulator.</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+R</string>
    </property>
   </action>
-  <action name="action_Connect">
+  <action name="actionConnect">
    <property name="icon">
     <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/network-transmit-receive.png</normaloff>:/icons/icons/network-transmit-receive.png</iconset>
@@ -169,7 +169,7 @@
     <string>&amp;Connect</string>
    </property>
    <property name="toolTip">
-    <string>Connect virtual machine to ADB</string>
+    <string>Connect virtual machine to ADB.</string>
    </property>
    <property name="shortcut">
     <string>F11</string>
@@ -184,7 +184,7 @@
     <string>&amp;Disconnect</string>
    </property>
    <property name="toolTip">
-    <string>Disconnect virtual machine from ADB</string>
+    <string>Disconnect virtual machine from ADB.</string>
    </property>
    <property name="shortcut">
     <string>F12</string>
@@ -214,7 +214,7 @@
     <string>ACPI s&amp;hutdown</string>
    </property>
    <property name="toolTip">
-    <string>Send ACPI shutdown signal to virtual machine</string>
+    <string>Send ACPI shutdown signal to virtual machine.</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+H</string>

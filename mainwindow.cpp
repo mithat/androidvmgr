@@ -29,7 +29,6 @@
 #include <QProcess>
 #include <QSettings>
 
-// TODO: Rename actions to be consistent regarding underscores.
 // TODO: Convert UI "VM Name" lineEdit to auto-populated menu of some sort.
 // TODO: Do STATUSBAR_TIMEOUT in a less kludgey way.
 #define STATUSBAR_TIMEOUT 8000
@@ -42,10 +41,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    QCoreApplication::setOrganizationName("androidvmgr");
-    QCoreApplication::setApplicationName("androidvmgr");
-//    QCoreApplication::setOrganizationDomain("mithatkonar.com");
-
     ui->setupUi(this);
 
     readSettings();
@@ -65,7 +60,7 @@ MainWindow::~MainWindow()
 /**
  * @brief Exit the app.
  */
-void MainWindow::on_action_Quit_triggered()
+void MainWindow::on_actionQuit_triggered()
 {
     qApp->quit();
 }
@@ -73,7 +68,7 @@ void MainWindow::on_action_Quit_triggered()
 /**
  * @brief Display a dialog box that allows app preferences to be set.
  */
-void MainWindow::on_action_Preferences_triggered()
+void MainWindow::on_actionPreferences_triggered()
 {
     // Show preferences dialog, record changes in settings file
     PreferencesDialog preferencesDialog(this);
@@ -89,7 +84,7 @@ void MainWindow::on_action_Preferences_triggered()
 /**
  * @brief Start the VM.
  */
-void MainWindow::on_action_Run_emulator_triggered()
+void MainWindow::on_actionRun_emulator_triggered()
 {
     QString program = "VBoxManage";
     QStringList arguments;
@@ -148,7 +143,7 @@ void MainWindow::on_actionVM_info_triggered()
 /**
  * @brief Connect the VM to the ADB.
  */
-void MainWindow::on_action_Connect_triggered()
+void MainWindow::on_actionConnect_triggered()
 {
     ui->statusBar->showMessage(tr("connecting..."));
 
@@ -208,14 +203,14 @@ void MainWindow::on_actionDisconnect_triggered()
 /**
  * @brief Display a dialog that shows information about this app.
  */
-void MainWindow::on_action_About_triggered()
+void MainWindow::on_actionAbout_triggered()
 {
     // TODO: About box strings should go someplace better.
     QMessageBox::about(this,
                        tr("About Android VM Manager"),
                        "<b>" + tr("Android VM Manager") + " " + VER + "</b><br />" +
                        "<br />" +
-                       tr("Copyright (C) 2013 Mithat Konar") + "<br />" +
+                       tr("Copyright &copy; 2013 Mithat Konar") + "<br />" +
                        tr("Licensed under the <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">GPLv3</a>."));
 }
 
