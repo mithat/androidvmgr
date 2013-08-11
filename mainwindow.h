@@ -68,7 +68,6 @@ private:
     // State variables:
     QString adbExe;     // adb executable including directory where the executable is.
     bool isAdbOnPath;   // true iff adb is on PATH (supercedes adbExe)
-    /* vmName and vmIPaddr stored in UI for now */
 
     // Service member functions:
     void writeSettings();
@@ -90,6 +89,7 @@ private:
     void showLastLineinStatusBar(QString msg);
 
     // psuedo-accessors:
+    /* vmName and vmIPaddr stored in UI for now */
     QString getVMname();
     QString getIPAddr();
     QString getADB();

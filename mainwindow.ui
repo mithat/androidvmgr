@@ -237,6 +237,9 @@
    <property name="text">
     <string>&amp;Start server</string>
    </property>
+   <property name="toolTip">
+    <string>Start the ADB server.</string>
+   </property>
    <property name="shortcut">
     <string>F9</string>
    </property>
@@ -244,6 +247,9 @@
   <action name="actionStop_server">
    <property name="text">
     <string>S&amp;top server</string>
+   </property>
+   <property name="toolTip">
+    <string>Stop the ADB server.</string>
    </property>
    <property name="shortcut">
     <string>F10</string>
