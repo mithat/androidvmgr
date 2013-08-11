@@ -58,6 +58,10 @@ private slots:
 
     void on_actionAbout_triggered();
 
+    void on_actionStart_server_triggered();
+
+    void on_actionStop_server_triggered();
+
 private:
     Ui::MainWindow *ui;
 
@@ -82,6 +86,14 @@ private:
     void readSettingsExecutables();
 
     void readSettingsGeometry();
+
+    void showLastLineinStatusBar(QString msg);
+
+    // psuedo-accessors:
+    QString getVMname();
+    QString getIPAddr();
+    QString getADB();
+    bool isVMrunning();
 };
 
 #endif // MAINWINDOW_H

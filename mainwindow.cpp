@@ -55,7 +55,9 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-//==== Actions ====//
+// =======
+// Actions
+// =======
 
 /**
  * @brief Exit the app.
@@ -78,7 +80,7 @@ void MainWindow::on_actionPreferences_triggered()
     // Reset settings group(s) changed in dialog from file
     readSettingsExecutables();
 
-    ui->statusBar->showMessage(tr("Preferences saved"), STATUSBAR_TIMEOUT);
+    ui->statusBar->showMessage(tr("Preferences saved."), STATUSBAR_TIMEOUT);
 }
 
 /**
@@ -86,16 +88,22 @@ void MainWindow::on_actionPreferences_triggered()
  */
 void MainWindow::on_actionRun_emulator_triggered()
 {
+    if (isVMrunning())
+    {
+        ui->statusBar->showMessage(tr("VM is already running."), STATUSBAR_TIMEOUT);
+        return;
+    }
+
     QString program = "VBoxManage";
     QStringList arguments;
-    arguments << "startvm" << ui->lineEdit_vmName->text();
+    arguments << "startvm" << getVMname();
 
     QProcess *theProcess = new QProcess(this);
     theProcess->start(program, arguments);
 
     theProcess->waitForFinished(-1);
     if (theProcess->exitCode() == 0)
-        ui->statusBar->showMessage(tr("VM started"), STATUSBAR_TIMEOUT);
+        ui->statusBar->showMessage(tr("VM started."), STATUSBAR_TIMEOUT);
     else
         ui->statusBar->showMessage(tr("Problem starting VM. Is it already running?"));
 }
@@ -105,16 +113,22 @@ void MainWindow::on_actionRun_emulator_triggered()
  */
 void MainWindow::on_actionACPI_shutdown_triggered()
 {
+    if (!isVMrunning())
+    {
+        ui->statusBar->showMessage(tr("VM is not running."), STATUSBAR_TIMEOUT);
+        return;
+    }
+
     QString program = "VBoxManage";
     QStringList arguments;
-    arguments << "controlvm" << ui->lineEdit_vmName->text() << "acpipowerbutton";
+    arguments << "controlvm" << getVMname() << "acpipowerbutton";
 
     QProcess *theProcess = new QProcess(this);
     theProcess->start(program, arguments);
 
     theProcess->waitForFinished(-1);
     if (theProcess->exitCode() == 0)
-        ui->statusBar->showMessage(tr("Shutdown signal sent to VM"), STATUSBAR_TIMEOUT);
+        ui->statusBar->showMessage(tr("Shutdown signal sent to VM."), STATUSBAR_TIMEOUT);
     else
         ui->statusBar->showMessage(tr("Problem sending shutdown signal. Is VM running?"));
 }
@@ -127,7 +141,7 @@ void MainWindow::on_actionVM_info_triggered()
     // Ask VBoxManage for a available VM properties.
     QString program = "VBoxManage";
     QStringList arguments;
-    arguments << "guestproperty" << "enumerate" << ui->lineEdit_vmName->text();
+    arguments << "guestproperty" << "enumerate" << getVMname();
 
     QProcess *theProcess = new QProcess(this);
     theProcess->setProcessChannelMode(QProcess::MergedChannels);
@@ -141,21 +155,14 @@ void MainWindow::on_actionVM_info_triggered()
 }
 
 /**
- * @brief Connect the VM to the ADB.
+ * @brief Start ADB server.
  */
-void MainWindow::on_actionConnect_triggered()
+void MainWindow::on_actionStart_server_triggered()
 {
-    ui->statusBar->showMessage(tr("connecting..."));
-
-    // set up and execute a process to start adb and connect
-    QString program;
-    if (isAdbOnPath)
-        program = "adb";    // TODO: this should be abstracted out and conditionally compiled for different platforms
-    else
-        program = adbExe;
-
+    // set up and execute a process to start adb server
+    QString program = getADB();
     QStringList arguments;
-    arguments << "connect" << ui->lineEdit_ipAddr->text();
+    arguments << "start-server";
 
     QProcess *theProcess = new QProcess(this);
     theProcess->setProcessChannelMode(QProcess::MergedChannels);
@@ -165,27 +172,20 @@ void MainWindow::on_actionConnect_triggered()
     theProcess->waitForFinished(-1);
     QString p_stdout = theProcess->readAllStandardOutput();
     if (p_stdout.isEmpty())
-        ui->statusBar->showMessage(tr("Problem running adb. Is the location set?"));
+        ui->statusBar->showMessage(tr("Server not started. Already running?"));
     else
-        ui->statusBar->showMessage(p_stdout, STATUSBAR_TIMEOUT);
+        showLastLineinStatusBar(p_stdout);
 }
 
 /**
- * @brief Disconnect the VM from the ADB.
+ * @brief Kill ADB server.
  */
-void MainWindow::on_actionDisconnect_triggered()
+void MainWindow::on_actionStop_server_triggered()
 {
-    ui->statusBar->showMessage(tr("disconnecting..."));
-
-    // set up and execute a process to start adb and disconnect
-    QString program;
-    if (isAdbOnPath)
-        program = "adb";    // TODO: this should be abstracted out and conditionally compiled for different platforms
-    else
-        program = adbExe;
-
+    // set up and execute a process to kill adb server
+    QString program = getADB();
     QStringList arguments;
-    arguments << "disconnect" << ui->lineEdit_ipAddr->text();
+    arguments << "kill-server";
 
     QProcess *theProcess = new QProcess(this);
     theProcess->setProcessChannelMode(QProcess::MergedChannels);
@@ -194,10 +194,75 @@ void MainWindow::on_actionDisconnect_triggered()
     // capture standard out and show.
     theProcess->waitForFinished(-1);
     QString p_stdout = theProcess->readAllStandardOutput();
-    if (p_stdout == "\n")
+    if (p_stdout.isEmpty())
+        ui->statusBar->showMessage(tr("Message sent."));
+    else
+        showLastLineinStatusBar(p_stdout);
+}
+
+/**
+ * @brief Connect the VM to the ADB.
+ */
+void MainWindow::on_actionConnect_triggered()
+{
+    if (!isVMrunning())
+    {
+        ui->statusBar->showMessage(tr("VM is not running."), STATUSBAR_TIMEOUT);
+        return;
+    }
+
+    ui->statusBar->showMessage(tr("connecting..."));
+
+    // set up and execute a process to start adb and connect
+    QString program = getADB();
+    QStringList arguments;
+    arguments << "connect" << getIPAddr();
+
+    QProcess *theProcess = new QProcess(this);
+    theProcess->setProcessChannelMode(QProcess::MergedChannels);
+    theProcess->start(program, arguments);
+
+    // capture standard out and show.
+    theProcess->waitForFinished(-1);
+    QString p_stdout = theProcess->readAllStandardOutput();
+    if (p_stdout.isEmpty())
+        ui->statusBar->showMessage(tr("Problem running ADB. Is the location set?"));
+    else
+        showLastLineinStatusBar(p_stdout);
+}
+
+/**
+ * @brief Disconnect the VM from the ADB.
+ */
+void MainWindow::on_actionDisconnect_triggered()
+{
+    if (!isVMrunning())
+    {
+        ui->statusBar->showMessage(tr("VM is not running."), STATUSBAR_TIMEOUT);
+        return;
+    }
+
+    ui->statusBar->showMessage(tr("disconnecting..."));
+
+    // set up and execute a process to start adb and disconnect
+    QString program = getADB();
+
+    QStringList arguments;
+    arguments << "disconnect" << getIPAddr();
+
+    QProcess *theProcess = new QProcess(this);
+    theProcess->setProcessChannelMode(QProcess::MergedChannels);
+    theProcess->start(program, arguments);
+
+    // capture standard out and show.
+    theProcess->waitForFinished(-1);
+    QString p_stdout = theProcess->readAllStandardOutput();
+    if (p_stdout.isEmpty())
+        ui->statusBar->showMessage(tr("Problem running ADB. Is the location set?"));
+    else if (p_stdout == "\n")
         ui->statusBar->showMessage(tr("disconnected"), STATUSBAR_TIMEOUT);
     else
-        ui->statusBar->showMessage(p_stdout);
+        showLastLineinStatusBar(p_stdout);
 }
 
 /**
@@ -214,7 +279,86 @@ void MainWindow::on_actionAbout_triggered()
                        tr("Licensed under the <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">GPLv3</a>."));
 }
 
-//==== Settings ====//
+// ===============
+// Service members
+// ===============
+
+/**
+ * @brief Show the last line contained in msg in the status bar.
+ * @param msg A body of (optionally multiline) text. (QString)
+ */
+void MainWindow::showLastLineinStatusBar(QString msg)
+{
+    // The following will effectively show only the last non-blank line in the status bar
+    // and send other lines to console.
+    QStringList lines = msg.split("\n");
+    Q_FOREACH (QString line, lines)
+    {
+        qDebug() << line;
+        if (!line.isEmpty())
+            ui->statusBar->showMessage(line, STATUSBAR_TIMEOUT);
+    }
+}
+
+/**
+ * @brief Return a string that is the name and path if required to the ADB executable.
+ * @return ADB executable (QString)
+ */
+inline QString MainWindow::getADB()
+{
+    if (isAdbOnPath)
+        return "adb"; // TODO: Conditionally compile for different platforms
+    return adbExe;
+}
+
+/**
+ * @brief Get the IP addres of the VM.
+ * @return VM's IP address (QString)
+ */
+inline QString MainWindow::getIPAddr()
+{
+    return ui->lineEdit_ipAddr->text();
+}
+
+/**
+ * @brief Get the name of the VM.
+ * @return VM's name (QString)
+ */
+inline QString MainWindow::getVMname()
+{
+    return ui->lineEdit_vmName->text();
+}
+
+/**
+ * @brief Is the VM running?
+ * @return Running state of VM (boolean).
+ */
+bool MainWindow::isVMrunning()
+{
+    // get list of running VMS:
+    QString program = "VBoxManage";
+    QStringList arguments;
+    arguments << "list" << "runningvms";
+
+    QProcess *theProcess = new QProcess(this);
+    theProcess->start(program, arguments);
+
+    theProcess->waitForFinished(-1);
+
+    // see if VM name is in results
+    if (theProcess->exitCode() == 0)
+    {
+        QString p_stdout = theProcess->readAllStandardOutput();
+        if (p_stdout.contains("\"" + getVMname() + "\"", Qt::CaseSensitive))
+            return true;
+    }
+
+    return false;
+}
+
+// --------
+// Settings
+// --------
 
 /**
  * @brief Write all settings.
@@ -233,8 +377,8 @@ void MainWindow::writeSettingsVM()
 {
     QSettings settings;
     settings.beginGroup("vm");
-    settings.setValue("name", ui->lineEdit_vmName->text());
-    settings.setValue("ip_addr", ui->lineEdit_ipAddr->text());
+    settings.setValue("name", getVMname());
+    settings.setValue("ip_addr", getIPAddr());
     settings.endGroup();
 }
 

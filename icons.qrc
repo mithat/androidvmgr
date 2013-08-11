@@ -10,5 +10,6 @@
         <file>icons/info.png</file>
         <file>icons/media-playback-stop.png</file>
         <file>icons/process-stop.png</file>
+        <file>icons/server.png</file>
     </qresource>
 </RCC>

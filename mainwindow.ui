@@ -87,14 +87,23 @@
     </property>
     <addaction name="actionRun_emulator"/>
     <addaction name="actionACPI_shutdown"/>
-    <addaction name="actionConnect"/>
-    <addaction name="actionDisconnect"/>
     <addaction name="separator"/>
     <addaction name="actionVM_info"/>
+   </widget>
+   <widget class="QMenu" name="menuADB">
+    <property name="title">
+     <string>ADB</string>
+    </property>
+    <addaction name="actionStart_server"/>
+    <addaction name="actionStop_server"/>
+    <addaction name="separator"/>
+    <addaction name="actionConnect"/>
+    <addaction name="actionDisconnect"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Edit"/>
    <addaction name="menu_Machine"/>
+   <addaction name="menuADB"/>
    <addaction name="menu_Help"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -166,10 +175,10 @@
      <normaloff>:/icons/icons/network-transmit-receive.png</normaloff>:/icons/icons/network-transmit-receive.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Connect</string>
+    <string>&amp;Connect VM</string>
    </property>
    <property name="toolTip">
-    <string>Connect virtual machine to ADB.</string>
+    <string>Connect ADB to virtual machine.</string>
    </property>
    <property name="shortcut">
     <string>F11</string>
@@ -181,10 +190,10 @@
      <normaloff>:/icons/icons/network-offline.png</normaloff>:/icons/icons/network-offline.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Disconnect</string>
+    <string>&amp;Disconnect VM</string>
    </property>
    <property name="toolTip">
-    <string>Disconnect virtual machine from ADB.</string>
+    <string>Disconnect ADB from virtual machine.</string>
    </property>
    <property name="shortcut">
     <string>F12</string>
@@ -218,6 +227,26 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+H</string>
+   </property>
+  </action>
+  <action name="actionStart_server">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/server.png</normaloff>:/icons/icons/server.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Start server</string>
+   </property>
+   <property name="shortcut">
+    <string>F9</string>
+   </property>
+  </action>
+  <action name="actionStop_server">
+   <property name="text">
+    <string>S&amp;top server</string>
+   </property>
+   <property name="shortcut">
+    <string>F10</string>
    </property>
   </action>
  </widget>
