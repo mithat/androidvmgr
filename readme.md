@@ -23,7 +23,7 @@ In the "VM name" text field of Android VM Manager's main interface, enter the na
 There appear to be two common ways that Android VMs are exposing their networking: **NAT with port forwarding** and **Host only**. If the VM's documentation doesn't get into specifics, try NAT with port forwarding first.
 
 ##### Using NAT with port forwarding
-1. Configure Virtual Box's settings for the VM as follows:
+1. Open VirtualBox and configure the VM's settings as follows:
     * In the "Network" tab, set "Attached to" to "NAT".
     * Click the "Advanced" arrow to expose the options.
     * Set "Adapter Type" to "PCnet-Fast III (Am79C973)." (This might vary according to the specific VM, but it has been tested with Android-x86.)
@@ -37,16 +37,16 @@ There appear to be two common ways that Android VMs are exposing their networkin
 2. In Android VM Manager's main interface, enter 127.0.0.1 in the "VM IP address" text field.
 
 ##### Using Host-only adapter
-1. Configure Virtual Box's settings for the VM as follows:
+1. Open VirtualBox and configure the VM's settings as follows:
     * Under the "Network" tab, set "Attached to" to "Host-only Adapter".
 2. Consult the VM's documentation regarding the best way to learn the IP address it is using. If all else fails, you might get something useful from Android VM Manager's _File > VM info..._ command. If your VM has a terminal in it, you might try the `netcfg` command in it.
 
 ### Use
 #### Starting the VM
-Start the virtual machine with _File > Start VM_.
+Start the virtual machine with _Machine > Start VM_.
 
 #### Connect the VM to the ADB
-Connect the virtual machine to the Android Debug Bridge with _File > Connect_.
+Connect the virtual machine to the Android Debug Bridge with _ADB > Connect VM_.
 
 #### Running apps in the VM
 Once the VM is running and connected, you should now be able to run applications in the virtual machine from your development environment. To be sure that it will launch in the VM rather than in the SDK's emulator, you might want to configure your development environment to prompt you for where to run your application on every run. In the Eclipse-based ADT, this is done via selecting _Run > Run configurations..._, clicking the "Target" tab, and selecting "Always prompt to pick device." 
