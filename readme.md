@@ -4,11 +4,11 @@ Android VM Manager
 Mithat Konar
 2013-07-26
 
-**Android VM Manager** is a GUI application designed to make launching an Android Virtual Machine and connecting it to the [Android Debug Bridge](https://developer.android.com/tools/help/adb.html) more convenient. 
+**Android VM Manager** is a desktop application designed to make launching an Android Virtual Machine and connecting it to the [Android Debug Bridge](https://developer.android.com/tools/help/adb.html) convenient. 
 
-It has been tested with [Android-x86](http://www.android-x86.org/) and [AndroVM](http://androvm.org/) on [aptosid Linux](http://www.aptosid.com/). It is currently lacking Windows support but should work on Mac OS. Only Virtual Box VMs are supported.
+It supports [VirtualBox](https://www.virtualbox.org/) VMs and has been tested with [Android-x86](http://www.android-x86.org/) and [AndroVM](http://androvm.org/) machines on [aptosid Linux](http://www.aptosid.com/). It is currently untested on Mac OS; Windows support may follow.
 
-Android VM Manager is developed with [Qt 5.1](https://qt-project.org/doc/qt-5.1/qtdoc/classes.html) using Qt widgets. It is licensed under the [GPLv3](https://www.gnu.org/licenses/gpl-3.0.txt).
+Android VM Manager is developed with [Qt widgets](http://qt-project.org/) and is licensed under the [GPLv3](https://www.gnu.org/licenses/gpl-3.0.txt).
 
 Quickstart
 -----------
