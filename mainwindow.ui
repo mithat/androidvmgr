@@ -2,14 +2,6 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>307</width>
-    <height>225</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>Android VM Manager</string>
   </property>
@@ -18,33 +10,41 @@
     <normaloff>:/icons/icons/application-default-icon.png</normaloff>:/icons/icons/application-default-icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="2" column="0">
-     <widget class="QGroupBox" name="group_ipAddr">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QGroupBox" name="group_VM">
       <property name="title">
-       <string>VM IP Address</string>
+       <string>Virtual Machine</string>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QLineEdit" name="lineEdit_ipAddr">
-         <property name="toolTip">
-          <string>IP address of the virtual machine (e.g., 192.168.56.101)</string>
+      <layout class="QFormLayout" name="formLayout">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_vmName">
+         <property name="text">
+          <string>Name</string>
+         </property>
+         <property name="buddy">
+          <cstring>lineEdit_vmName</cstring>
          </property>
         </widget>
        </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QGroupBox" name="group_vmName">
-      <property name="title">
-       <string>VM Name</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
+       <item row="0" column="1">
         <widget class="QLineEdit" name="lineEdit_vmName">
          <property name="toolTip">
           <string>Name of the virtual machine in Virtual Box</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_ipAddr">
+         <property name="text">
+          <string>IP address</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="lineEdit_ipAddr">
+         <property name="toolTip">
+          <string>IP address of the virtual machine (e.g., 192.168.56.101)</string>
          </property>
         </widget>
        </item>
@@ -58,7 +58,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>307</width>
+     <width>300</width>
      <height>19</height>
     </rect>
    </property>
@@ -83,7 +83,7 @@
    </widget>
    <widget class="QMenu" name="menu_Machine">
     <property name="title">
-     <string>&amp;Machine</string>
+     <string>Virtual Machine</string>
     </property>
     <addaction name="actionRun_emulator"/>
     <addaction name="actionACPI_shutdown"/>
@@ -94,11 +94,11 @@
     <property name="title">
      <string>ADB</string>
     </property>
-    <addaction name="actionStart_server"/>
-    <addaction name="actionStop_server"/>
-    <addaction name="separator"/>
     <addaction name="actionConnect"/>
     <addaction name="actionDisconnect"/>
+    <addaction name="separator"/>
+    <addaction name="actionStart_server"/>
+    <addaction name="actionStop_server"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Edit"/>
@@ -118,8 +118,6 @@
    <addaction name="separator"/>
    <addaction name="actionConnect"/>
    <addaction name="actionDisconnect"/>
-   <addaction name="separator"/>
-   <addaction name="actionPreferences"/>
    <addaction name="separator"/>
    <addaction name="actionQuit"/>
   </widget>
@@ -220,7 +218,7 @@
      <normaloff>:/icons/icons/media-playback-stop.png</normaloff>:/icons/icons/media-playback-stop.png</iconset>
    </property>
    <property name="text">
-    <string>ACPI s&amp;hutdown</string>
+    <string>Send ACPI s&amp;hutdown</string>
    </property>
    <property name="toolTip">
     <string>Send ACPI shutdown signal to virtual machine.</string>
