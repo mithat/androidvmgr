@@ -2,7 +2,7 @@ Android VM Manager
 ==================
 
 Mithat Konar
-2013-07-26
+2013-078-26
 
 **Android VM Manager** is a desktop application designed to make launching an Android Virtual Machine and connecting it to the [Android Debug Bridge](https://developer.android.com/tools/help/adb.html) convenient. 
 
@@ -20,7 +20,7 @@ Start Android VM Manager and go to _Edit > Preferences..._. If you added the `pl
 In the "VM name" text field of Android VM Manager's main interface, enter the name of the virtual machine you want to use as it appears in Virtual Box.
 
 #### Set the IP address of the VM
-There appear to be two common ways that Android VMs are exposing their networking: **NAT with port forwarding** and **Host only**. If the VM's documentation doesn't get into specifics, try NAT with port forwarding first.
+Two methods for configuring the IP address of the VM are described below: **NAT with port forwarding** and **Host only**. If the VM's documentation doesn't tell you what you should be, try NAT with port forwarding.
 
 ##### Using NAT with port forwarding
 1. Open VirtualBox and configure the VM's settings as follows:
