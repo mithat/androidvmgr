@@ -276,7 +276,10 @@ void MainWindow::on_actionAbout_triggered()
                        "<b>" + tr("Android VM Manager") + " " + VER + "</b><br />" +
                        "<br />" +
                        tr("Copyright &copy; 2013 Mithat Konar") + "<br />" +
-                       tr("Licensed under the <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">GPLv3</a>."));
+                       tr("Licensed under the <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">GPLv3</a>") + "<br />" +
+                       "<br />" +
+                       "<a href=\"https://bitbucket.org/mithat/androidvmgr\">https://bitbucket.org/mithat/androidvmgr</a><br />"
+                       );
 }
 
 // ===============
