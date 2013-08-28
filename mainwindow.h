@@ -65,6 +65,8 @@ private slots:
 
     void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
 
+    void appQuit();
+
 private:
     Ui::MainWindow *ui;
 
@@ -76,7 +78,7 @@ private:
     bool isAdbOnPath;   // true iff adb is on PATH (supercedes adbExe)
 
     // Service member functions:
-    // TODO: some of these are good candidates to become slots.
+    // TODO: some of these are probably good candidates to become slots.
     void writeSettings();
     void writeSettingsExecutables();
     void writeSettingsVM();

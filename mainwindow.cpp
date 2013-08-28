@@ -55,54 +55,16 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-// =======
-// Actions
-// =======
+// ===============
+// Action handlers
+// ===============
 
 /**
  * @brief Exit the app.
  */
 void MainWindow::on_actionQuit_triggered()
 {
-    bool isQuit = true;
-    if (isVMrunning())
-    {
-        // kludge to work around action initialed by notification icon:
-        bool wasHidden = false;
-        if (this->isHidden())
-        {
-            wasHidden = true;
-            this->show();
-        }
-
-        // prompt for ACPI shutdown of VM:
-        QMessageBox::StandardButton isSend = QMessageBox::question(
-                    this,tr("VM is running"),
-                    tr("Send ACPI shutdown signal to the Virtaul Machine?"),
-                    QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel,
-                    QMessageBox::Yes);
-        switch (isSend)
-        {
-        case QMessageBox::Yes:
-            on_actionACPI_shutdown_triggered();
-            break;
-        case QMessageBox::No:
-            break;
-        default:
-            isQuit = false;
-            break;
-        }
-
-        // second part of kludge
-        if (wasHidden)
-            this->hide();
-    }
-
-    if (isQuit)
-    {
-        qApp->quit();
-//    this->close();
-    }
+    this->appQuit();
 }
 
 /**
@@ -326,6 +288,49 @@ void MainWindow::on_actionAbout_triggered()
 // ===========
 
 /**
+ * @brief Safely quit the app
+ */
+void MainWindow::appQuit()
+{
+    bool isQuit = true;
+    if (isVMrunning())
+    {
+        // first part of kludge to work around action initialed by notification icon:
+        bool wasHidden = this->isHidden();
+        if (wasHidden)
+            this->show();
+
+        // prompt for ACPI shutdown of VM:
+        QMessageBox::StandardButton isSend = QMessageBox::question(
+                    this,tr("VM is running"),
+                    tr("Send ACPI shutdown signal to the Virtaul Machine?"),
+                    QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel,
+                    QMessageBox::Yes);
+        switch (isSend)
+        {
+        case QMessageBox::Yes:
+            on_actionACPI_shutdown_triggered();
+            break;
+        case QMessageBox::No:
+            break;
+        default:
+            isQuit = false;
+            break;
+        }
+
+        // second part of kludge:
+        if (wasHidden)
+            this->hide();
+    }
+
+    if (isQuit)
+    {
+        qApp->quit();
+//    this->close();
+    }
+}
+
+/**
  * @brief Process mouse clicks on system tray icon.
  * @param reason The kind of mouse click (QSystemTrayIcon::ActivationReason)
  */
@@ -520,14 +525,12 @@ void MainWindow::readSettingsGeometry()
 }
 
 /**
- * @brief Read settings related to this window's geometry.
+ * @brief Configure the system tray icon.
  *
- * @return true if a tray icon was created, false otherwise (boolean)
  */
 void MainWindow::configureTrayIcon()
 {
-    QMenu *trayIconMenu;
-    trayIconMenu = new QMenu(this);
+    QMenu *trayIconMenu = new QMenu(this);
     trayIconMenu->addAction(ui->actionRun_emulator);
     trayIconMenu->addAction(ui->actionACPI_shutdown);
     trayIconMenu->addAction(ui->actionConnect);
