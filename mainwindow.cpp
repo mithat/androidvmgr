@@ -465,7 +465,19 @@ void MainWindow::readSettingsGeometry()
  */
 void MainWindow::configureTrayIcon()
 {
+
+//    connect(trayIcon, SIGNAL(messageClicked()), this, SLOT(messageClicked()));
+
+    trayIconMenu = new QMenu(this);
+    trayIconMenu->addAction(ui->actionRun_emulator);
+    trayIconMenu->addAction(ui->actionACPI_shutdown);
+    trayIconMenu->addAction(ui->actionConnect);
+    trayIconMenu->addAction(ui->actionDisconnect);
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction(ui->actionQuit);
+
     trayIcon = new QSystemTrayIcon(this->windowIcon(), this);
     trayIcon->setToolTip(this->windowTitle());
+    trayIcon->setContextMenu(trayIconMenu);
     trayIcon->show();
 }

@@ -68,6 +68,7 @@ private:
 
     // UI elements
     QSystemTrayIcon *trayIcon;
+    QMenu *trayIconMenu;
 
     // State variables:
     QString adbExe;     // adb executable including directory where the executable is.
