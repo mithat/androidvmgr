@@ -207,9 +207,9 @@ void MainWindow::on_actionStart_server_triggered()
     theProcess->waitForFinished(-1);
     QString p_stdout = theProcess->readAllStandardOutput();
     if (p_stdout.isEmpty())
-        ui->statusBar->showMessage(tr("Server not started. Already running?"));
+        ui->statusBar->showMessage(tr("Server not started. Already running? Path set?"));
     else
-        showLastLineinStatusBar(p_stdout);
+        ui->statusBar->showMessage(lastLine(p_stdout));
 }
 
 /**
@@ -232,7 +232,8 @@ void MainWindow::on_actionStop_server_triggered()
     if (p_stdout.isEmpty())
         ui->statusBar->showMessage(tr("Message sent."));
     else
-        showLastLineinStatusBar(p_stdout);
+        ui->statusBar->showMessage(lastLine(p_stdout));
+
 }
 
 /**
@@ -240,30 +241,44 @@ void MainWindow::on_actionStop_server_triggered()
  */
 void MainWindow::on_actionConnect_triggered()
 {
-    if (!isVMrunning())
-    {
-        ui->statusBar->showMessage(tr("VM is not running."), STATUSBAR_TIMEOUT);
-        return;
+    // notification defaults
+    QString theTitle = tr("VM to ADB connection");
+    QString theMessage;
+    QSystemTrayIcon::MessageIcon theIcon = QSystemTrayIcon::Information;
+    int timeout = STATUSBAR_TIMEOUT;
+
+    if (!isVMrunning()) {
+        theMessage = tr("VM is not running.");
+        theIcon = QSystemTrayIcon::Warning;
+    }
+    else {
+        ui->statusBar->showMessage(tr("connecting..."));
+
+        // set up and execute a process to start adb and connect
+        QString program = getADB();
+        QStringList arguments;
+        arguments << "connect" << getIPAddr();
+
+        QProcess *theProcess = new QProcess(this);
+        theProcess->setProcessChannelMode(QProcess::MergedChannels);
+        theProcess->start(program, arguments);
+
+        // capture standard out and show.
+        theProcess->waitForFinished(-1);
+        theMessage = theProcess->readAllStandardOutput();
+        if (theMessage.isEmpty()) {
+            theMessage=tr("Problem running ADB. Is the location set?");
+            theIcon = QSystemTrayIcon::Critical;
+            timeout = 0;
+        }
     }
 
-    ui->statusBar->showMessage(tr("connecting..."));
-
-    // set up and execute a process to start adb and connect
-    QString program = getADB();
-    QStringList arguments;
-    arguments << "connect" << getIPAddr();
-
-    QProcess *theProcess = new QProcess(this);
-    theProcess->setProcessChannelMode(QProcess::MergedChannels);
-    theProcess->start(program, arguments);
-
-    // capture standard out and show.
-    theProcess->waitForFinished(-1);
-    QString p_stdout = theProcess->readAllStandardOutput();
-    if (p_stdout.isEmpty())
-        ui->statusBar->showMessage(tr("Problem running ADB. Is the location set?"));
-    else
-        showLastLineinStatusBar(p_stdout);
+    // update notifications:
+    ui->statusBar->showMessage(lastLine(theMessage), timeout);
+    if (this->isHidden() && trayIcon->isVisible())
+        trayIcon->showMessage(theTitle,
+                              theMessage  + " (" + this->getVMname()+")",
+                              theIcon, timeout);
 }
 
 /**
@@ -271,32 +286,47 @@ void MainWindow::on_actionConnect_triggered()
  */
 void MainWindow::on_actionDisconnect_triggered()
 {
+    // notification defaults
+    QString theTitle = tr("VM to ADB connection");
+    QString theMessage;
+    QSystemTrayIcon::MessageIcon theIcon = QSystemTrayIcon::Information;
+    int timeout = STATUSBAR_TIMEOUT;
+
     if (!isVMrunning()) {
-        ui->statusBar->showMessage(tr("VM is not running."), STATUSBAR_TIMEOUT);
-        return;
+        theMessage = tr("VM is not running.");
+        theIcon = QSystemTrayIcon::Warning;
+    }
+    else {
+        ui->statusBar->showMessage(tr("disconnecting..."));
+
+        // set up and execute a process to start adb and disconnect
+        QString program = getADB();
+
+        QStringList arguments;
+        arguments << "disconnect" << getIPAddr();
+
+        QProcess *theProcess = new QProcess(this);
+        theProcess->setProcessChannelMode(QProcess::MergedChannels);
+        theProcess->start(program, arguments);
+
+        // capture standard out and show.
+        theProcess->waitForFinished(-1);
+        theMessage = theProcess->readAllStandardOutput();
+        if (theMessage.isEmpty()) {
+            theMessage = tr("Problem running ADB. Is the location set?");
+            theIcon = QSystemTrayIcon::Critical;
+            timeout = 0;
+        }
+        else if (theMessage == "\n")
+            theMessage = tr("disconnected");
     }
 
-    ui->statusBar->showMessage(tr("disconnecting..."));
-
-    // set up and execute a process to start adb and disconnect
-    QString program = getADB();
-
-    QStringList arguments;
-    arguments << "disconnect" << getIPAddr();
-
-    QProcess *theProcess = new QProcess(this);
-    theProcess->setProcessChannelMode(QProcess::MergedChannels);
-    theProcess->start(program, arguments);
-
-    // capture standard out and show.
-    theProcess->waitForFinished(-1);
-    QString p_stdout = theProcess->readAllStandardOutput();
-    if (p_stdout.isEmpty())
-        ui->statusBar->showMessage(tr("Problem running ADB. Is the location set?"));
-    else if (p_stdout == "\n")
-        ui->statusBar->showMessage(tr("disconnected"), STATUSBAR_TIMEOUT);
-    else
-        showLastLineinStatusBar(p_stdout);
+    // update notifications:
+    ui->statusBar->showMessage(lastLine(theMessage), timeout);
+    if (this->isHidden() && trayIcon->isVisible())
+        trayIcon->showMessage(theTitle,
+                              theMessage  + " (" + this->getVMname()+")",
+                              theIcon, timeout);
 }
 
 /**
@@ -393,19 +423,22 @@ void MainWindow::closeEvent(QCloseEvent *event)
 }
 
 /**
- * @brief Show the last line contained in msg in the status bar.
+ * @brief Return the last non-blank line contained in msg.
  * @param msg A body of (optionally multiline) text. (QString)
+ * @return The last line in msg (QString)
  */
-void MainWindow::showLastLineinStatusBar(QString msg)
+QString MainWindow::lastLine(QString msg)
 {
-    // The following will effectively show only the last non-blank line in the status bar
+    // The following will effectively nab the last non-blank line
     // and send other lines to console.
+    QString lastLine = "";
     QStringList lines = msg.split("\n");
     Q_FOREACH (QString line, lines) {
         qDebug() << line;
         if (!line.isEmpty())
-            ui->statusBar->showMessage(line, STATUSBAR_TIMEOUT);
+            lastLine = line;
     }
+    return lastLine;
 }
 
 /**

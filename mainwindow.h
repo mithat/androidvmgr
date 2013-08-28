@@ -90,7 +90,7 @@ private:
     void readSettingsVM();
     void readSettingsExecutables();
     void readSettingsGeometry();
-    void showLastLineinStatusBar(QString msg);
+    QString lastLine(QString msg);
     void configureTrayIcon();
 
     // psuedo-accessors:
