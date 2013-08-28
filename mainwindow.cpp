@@ -119,12 +119,7 @@ void MainWindow::on_actionRun_emulator_triggered()
         }
     }
 
-    // update notifications:
-    ui->statusBar->showMessage(theMessage, timeout);
-    if (this->isHidden() && trayIcon->isVisible())
-        trayIcon->showMessage(theTitle,
-                              theMessage  + " (" + this->getVMname()+")",
-                              theIcon, timeout);
+    updateNotification(theTitle, theMessage, theIcon, timeout);
 }
 
 /**
@@ -160,12 +155,7 @@ void MainWindow::on_actionACPI_shutdown_triggered()
         }
     }
 
-    // update notifications:
-    ui->statusBar->showMessage(theMessage, timeout);
-    if (this->isHidden() && trayIcon->isVisible())
-        trayIcon->showMessage(theTitle,
-                              theMessage + " (" + this->getVMname()+")",
-                              theIcon, timeout);
+    updateNotification(theTitle, theMessage, theIcon, timeout);
 }
 
 /**
@@ -273,12 +263,7 @@ void MainWindow::on_actionConnect_triggered()
         }
     }
 
-    // update notifications:
-    ui->statusBar->showMessage(lastLine(theMessage), timeout);
-    if (this->isHidden() && trayIcon->isVisible())
-        trayIcon->showMessage(theTitle,
-                              theMessage  + " (" + this->getVMname()+")",
-                              theIcon, timeout);
+    updateNotification(theTitle, theMessage, theIcon, timeout);
 }
 
 /**
@@ -321,12 +306,7 @@ void MainWindow::on_actionDisconnect_triggered()
             theMessage = tr("disconnected");
     }
 
-    // update notifications:
-    ui->statusBar->showMessage(lastLine(theMessage), timeout);
-    if (this->isHidden() && trayIcon->isVisible())
-        trayIcon->showMessage(theTitle,
-                              theMessage  + " (" + this->getVMname()+")",
-                              theIcon, timeout);
+    updateNotification(theTitle, theMessage, theIcon, timeout);
 }
 
 /**
@@ -423,11 +403,30 @@ void MainWindow::closeEvent(QCloseEvent *event)
 }
 
 /**
+ * @brief Show statusbar or systray ballon notification as appropriate.
+ * @param theTitle   the title to be used in balloon notifications (QString)
+ * @param theMessage the message to be shown; can be multi-line; only last line shown in statusbar (QString)
+ * @param theIcon    the icon to be used balloon notifications (QString)
+ * @param timeout    timeout for both statusbar and balloon notification (int)
+ */
+void MainWindow::updateNotification(const QString &theTitle,
+                         const QString &theMessage,
+                         const QSystemTrayIcon::MessageIcon theIcon,
+                         const int timeout)
+{
+    ui->statusBar->showMessage(lastLine(theMessage), timeout);
+    if (this->isHidden() && trayIcon->isVisible())
+        trayIcon->showMessage(theTitle,
+                              theMessage + " (" + this->getVMname()+")",
+                              theIcon, timeout);
+}
+
+/**
  * @brief Return the last non-blank line contained in msg.
  * @param msg A body of (optionally multiline) text. (QString)
  * @return The last line in msg (QString)
  */
-QString MainWindow::lastLine(QString msg)
+QString MainWindow::lastLine(const QString &msg)
 {
     // The following will effectively nab the last non-blank line
     // and send other lines to console.

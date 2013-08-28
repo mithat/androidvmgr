@@ -90,7 +90,11 @@ private:
     void readSettingsVM();
     void readSettingsExecutables();
     void readSettingsGeometry();
-    QString lastLine(QString msg);
+    void updateNotification(const QString &theTitle,
+                             const QString &theMessage,
+                             const QSystemTrayIcon::MessageIcon theIcon,
+                             const int timeout);
+    QString lastLine(const QString &);
     void configureTrayIcon();
 
     // psuedo-accessors:
