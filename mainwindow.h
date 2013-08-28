@@ -42,6 +42,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+protected:
+    virtual void closeEvent (QCloseEvent * event);
+
 private slots:
     void on_actionQuit_triggered();
 

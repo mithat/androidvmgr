@@ -28,6 +28,7 @@
 #include <QDebug>
 #include <QProcess>
 #include <QSettings>
+#include <QCloseEvent>
 
 // TODO: Convert UI "VM Name" lineEdit to auto-populated menu of some sort.
 // TODO: Do STATUSBAR_TIMEOUT in a less kludgey way.
@@ -351,6 +352,15 @@ void MainWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 // ===============
 // Service members
 // ===============
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if (trayIcon->isVisible())
+    {
+        hide();
+        event->ignore();
+    }
+}
 
 /**
  * @brief Show the last line contained in msg in the status bar.
