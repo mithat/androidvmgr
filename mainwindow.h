@@ -63,12 +63,13 @@ private slots:
 
     void on_actionStop_server_triggered();
 
+    void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
+
 private:
     Ui::MainWindow *ui;
 
     // UI elements
     QSystemTrayIcon *trayIcon;
-    QMenu *trayIconMenu;
 
     // State variables:
     QString adbExe;     // adb executable including directory where the executable is.

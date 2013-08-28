@@ -64,7 +64,45 @@ MainWindow::~MainWindow()
  */
 void MainWindow::on_actionQuit_triggered()
 {
-    qApp->quit();
+    bool isQuit = true;
+    if (isVMrunning())
+    {
+        // kludge to work around action initialed by notification icon:
+        bool wasHidden = false;
+        if (this->isHidden())
+        {
+            wasHidden = true;
+            this->show();
+        }
+
+        // prompt for ACPI shutdown of VM:
+        QMessageBox::StandardButton isSend = QMessageBox::question(
+                    this,tr("VM is running"),
+                    tr("Send ACPI shutdown signal to the Virtaul Machine?"),
+                    QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel,
+                    QMessageBox::Yes);
+        switch (isSend)
+        {
+        case QMessageBox::Yes:
+            on_actionACPI_shutdown_triggered();
+            break;
+        case QMessageBox::No:
+            break;
+        default:
+            isQuit = false;
+            break;
+        }
+
+        // second part of kludge
+        if (wasHidden)
+            this->hide();
+    }
+
+    if (isQuit)
+    {
+        qApp->quit();
+//    this->close();
+    }
 }
 
 /**
@@ -282,6 +320,29 @@ void MainWindow::on_actionAbout_triggered()
                        );
 }
 
+
+// ===========
+// Other slots
+// ===========
+
+/**
+ * @brief Process mouse clicks on system tray icon.
+ * @param reason The kind of mouse click (QSystemTrayIcon::ActivationReason)
+ */
+void MainWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
+{
+    switch (reason)
+    {
+    case QSystemTrayIcon::Trigger:
+    case QSystemTrayIcon::DoubleClick:
+        // toggle visibility
+        this->setVisible(!this->isVisible());
+        break;
+    default:
+        ;
+    }
+}
+
 // ===============
 // Service members
 // ===============
@@ -465,9 +526,7 @@ void MainWindow::readSettingsGeometry()
  */
 void MainWindow::configureTrayIcon()
 {
-
-//    connect(trayIcon, SIGNAL(messageClicked()), this, SLOT(messageClicked()));
-
+    QMenu *trayIconMenu;
     trayIconMenu = new QMenu(this);
     trayIconMenu->addAction(ui->actionRun_emulator);
     trayIconMenu->addAction(ui->actionACPI_shutdown);
@@ -479,5 +538,9 @@ void MainWindow::configureTrayIcon()
     trayIcon = new QSystemTrayIcon(this->windowIcon(), this);
     trayIcon->setToolTip(this->windowTitle());
     trayIcon->setContextMenu(trayIconMenu);
+
+    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+            this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
+
     trayIcon->show();
 }
