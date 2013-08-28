@@ -89,24 +89,42 @@ void MainWindow::on_actionPreferences_triggered()
  */
 void MainWindow::on_actionRun_emulator_triggered()
 {
-    if (isVMrunning())
-    {
-        ui->statusBar->showMessage(tr("VM is already running."), STATUSBAR_TIMEOUT);
-        return;
+    // notification defaults
+    QString theTitle = tr("VM startup");
+    QString theMessage;
+    QSystemTrayIcon::MessageIcon theIcon = QSystemTrayIcon::Information;
+    int timeout = STATUSBAR_TIMEOUT;
+
+    if (isVMrunning()) {
+        theMessage = tr("VM is already running.");
+        theIcon = QSystemTrayIcon::Warning;
+
+    }
+    else {
+        QString program = "VBoxManage";
+        QStringList arguments;
+        arguments << "startvm" << getVMname();
+
+        QProcess *theProcess = new QProcess(this);
+        theProcess->start(program, arguments);
+
+        theProcess->waitForFinished(-1);
+        if (theProcess->exitCode() == 0) {
+            theMessage = tr("VM started.");
+        }
+        else {
+            theMessage = tr("Problem starting VM. Does it exist?");
+            theIcon = QSystemTrayIcon::Critical;
+            timeout = 0;
+        }
     }
 
-    QString program = "VBoxManage";
-    QStringList arguments;
-    arguments << "startvm" << getVMname();
-
-    QProcess *theProcess = new QProcess(this);
-    theProcess->start(program, arguments);
-
-    theProcess->waitForFinished(-1);
-    if (theProcess->exitCode() == 0)
-        ui->statusBar->showMessage(tr("VM started."), STATUSBAR_TIMEOUT);
-    else
-        ui->statusBar->showMessage(tr("Problem starting VM. Is it already running?"));
+    // update notifications:
+    ui->statusBar->showMessage(theMessage, timeout);
+    if (this->isHidden() && trayIcon->isVisible())
+        trayIcon->showMessage(theTitle,
+                              theMessage  + " (" + this->getVMname()+")",
+                              theIcon, timeout);
 }
 
 /**
@@ -114,24 +132,40 @@ void MainWindow::on_actionRun_emulator_triggered()
  */
 void MainWindow::on_actionACPI_shutdown_triggered()
 {
-    if (!isVMrunning())
-    {
-        ui->statusBar->showMessage(tr("VM is not running."), STATUSBAR_TIMEOUT);
-        return;
+    // notification defaults
+    QString theTitle = tr("ACPI shutdown");
+    QString theMessage;
+    QSystemTrayIcon::MessageIcon theIcon = QSystemTrayIcon::Information;
+    int timeout = STATUSBAR_TIMEOUT;
+
+    if (!isVMrunning()) {
+        theMessage = tr("VM is not running.");
+        theIcon = QSystemTrayIcon::Warning;
+    }
+    else {
+        QString program = "VBoxManage";
+        QStringList arguments;
+        arguments << "controlvm" << getVMname() << "acpipowerbutton";
+
+        QProcess *theProcess = new QProcess(this);
+        theProcess->start(program, arguments);
+
+        theProcess->waitForFinished(-1);
+        if (theProcess->exitCode() == 0)
+            theMessage = tr("Shutdown signal sent to VM.");
+        else {
+            theMessage = tr("Problem sending shutdown signal.");
+            theIcon = QSystemTrayIcon::Critical;
+            timeout = 0;
+        }
     }
 
-    QString program = "VBoxManage";
-    QStringList arguments;
-    arguments << "controlvm" << getVMname() << "acpipowerbutton";
-
-    QProcess *theProcess = new QProcess(this);
-    theProcess->start(program, arguments);
-
-    theProcess->waitForFinished(-1);
-    if (theProcess->exitCode() == 0)
-        ui->statusBar->showMessage(tr("Shutdown signal sent to VM."), STATUSBAR_TIMEOUT);
-    else
-        ui->statusBar->showMessage(tr("Problem sending shutdown signal. Is VM running?"));
+    // update notifications:
+    ui->statusBar->showMessage(theMessage, timeout);
+    if (this->isHidden() && trayIcon->isVisible())
+        trayIcon->showMessage(theTitle,
+                              theMessage + " (" + this->getVMname()+")",
+                              theIcon, timeout);
 }
 
 /**
@@ -237,8 +271,7 @@ void MainWindow::on_actionConnect_triggered()
  */
 void MainWindow::on_actionDisconnect_triggered()
 {
-    if (!isVMrunning())
-    {
+    if (!isVMrunning()) {
         ui->statusBar->showMessage(tr("VM is not running."), STATUSBAR_TIMEOUT);
         return;
     }
@@ -294,8 +327,7 @@ void MainWindow::on_actionAbout_triggered()
 void MainWindow::appQuit()
 {
     bool isQuit = true;
-    if (isVMrunning())
-    {
+    if (isVMrunning()) {
         // first part of kludge to work around action initialed by notification icon:
         bool wasHidden = this->isHidden();
         if (wasHidden)
@@ -324,8 +356,7 @@ void MainWindow::appQuit()
             this->hide();
     }
 
-    if (isQuit)
-    {
+    if (isQuit) {
         qApp->quit();
 //    this->close();
     }
@@ -355,8 +386,7 @@ void MainWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    if (trayIcon->isVisible())
-    {
+    if (trayIcon->isVisible()) {
         hide();
         event->ignore();
     }
@@ -371,8 +401,7 @@ void MainWindow::showLastLineinStatusBar(QString msg)
     // The following will effectively show only the last non-blank line in the status bar
     // and send other lines to console.
     QStringList lines = msg.split("\n");
-    Q_FOREACH (QString line, lines)
-    {
+    Q_FOREACH (QString line, lines) {
         qDebug() << line;
         if (!line.isEmpty())
             ui->statusBar->showMessage(line, STATUSBAR_TIMEOUT);
@@ -425,8 +454,7 @@ bool MainWindow::isVMrunning()
     theProcess->waitForFinished(-1);
 
     // see if VM name is in results
-    if (theProcess->exitCode() == 0)
-    {
+    if (theProcess->exitCode() == 0) {
         QString p_stdout = theProcess->readAllStandardOutput();
         if (p_stdout.contains("\"" + getVMname() + "\"", Qt::CaseSensitive))
             return true;
