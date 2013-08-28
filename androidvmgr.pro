@@ -30,7 +30,7 @@ TARGET = androidvmgr
 TEMPLATE = app
 
 # from: http://www.qtcentre.org/wiki/index.php?title=Version_numbering_using_QMake
-VERSION = 0.2.1b
+VERSION = 0.2.2b
 VERSTR = '\\"$${VERSION}\\"'  # place quotes around the version string
 DEFINES += VER=\"$${VERSTR}\" # create a VER macro containing the version string
 

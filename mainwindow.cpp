@@ -540,6 +540,7 @@ void MainWindow::readSettingsGeometry()
  */
 void MainWindow::configureTrayIcon()
 {
+    //TODO: Popup status bar action messages (i.e., status bar messages) when main UI is hidden
     QMenu *trayIconMenu = new QMenu(this);
     trayIconMenu->addAction(ui->actionRun_emulator);
     trayIconMenu->addAction(ui->actionACPI_shutdown);
