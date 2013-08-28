@@ -42,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
+    configureTrayIcon();
     readSettings();
 }
 
@@ -456,4 +456,16 @@ void MainWindow::readSettingsGeometry()
     restoreGeometry(settings.value("geometry").toByteArray());
     restoreState(settings.value("windowState").toByteArray());
     settings.endGroup();
+}
+
+/**
+ * @brief Read settings related to this window's geometry.
+ *
+ * @return true if a tray icon was created, false otherwise (boolean)
+ */
+void MainWindow::configureTrayIcon()
+{
+    trayIcon = new QSystemTrayIcon(this->windowIcon(), this);
+    trayIcon->setToolTip(this->windowTitle());
+    trayIcon->show();
 }

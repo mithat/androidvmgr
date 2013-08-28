@@ -25,6 +25,7 @@
 
 #include <QMainWindow>
 #include <QString>
+#include <QSystemTrayIcon>
 
 namespace Ui {
 class MainWindow;
@@ -65,28 +66,25 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
+    // UI elements
+    QSystemTrayIcon *trayIcon;
+
     // State variables:
     QString adbExe;     // adb executable including directory where the executable is.
     bool isAdbOnPath;   // true iff adb is on PATH (supercedes adbExe)
 
     // Service member functions:
+    // TODO: some of these are good candidates to become slots.
     void writeSettings();
-
     void writeSettingsExecutables();
-
     void writeSettingsVM();
-
     void writeWindowGeometry();
-
     void readSettings();
-
     void readSettingsVM();
-
     void readSettingsExecutables();
-
     void readSettingsGeometry();
-
     void showLastLineinStatusBar(QString msg);
+    void configureTrayIcon();
 
     // psuedo-accessors:
     /* vmName and vmIPaddr stored in UI for now */
