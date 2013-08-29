@@ -199,7 +199,10 @@ void MainWindow::on_actionStart_server_triggered()
     if (p_stdout.isEmpty())
         ui->statusBar->showMessage(tr("Server not started. Already running? Path set?"));
     else
+    {
         ui->statusBar->showMessage(lastLine(p_stdout));
+        qDebug() << p_stdout;
+    }
 }
 
 /**
@@ -432,10 +435,15 @@ QString MainWindow::lastLine(const QString &msg)
     // and send other lines to console.
     QString lastLine = "";
     QStringList lines = msg.split("\n");
-    Q_FOREACH (QString line, lines) {
-        qDebug() << line;
-        if (!line.isEmpty())
-            lastLine = line;
+//    Q_FOREACH (QString line, lines) {
+//        if (!line.isEmpty())
+//            lastLine = line;
+//    }
+    for (int i=0; i<lines.length(); i++)
+    {
+        qDebug() << lines[i];
+        if (!lines[i].isEmpty())
+            lastLine = lines[i];
     }
     return lastLine;
 }
