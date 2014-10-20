@@ -143,16 +143,20 @@ void MainWindow::on_actionACPI_shutdown_triggered()
         arguments << "controlvm" << getVMname() << "acpipowerbutton";
 
         QProcess *theProcess = new QProcess(this);
-        theProcess->start(program, arguments);
 
-        theProcess->waitForFinished(-1);
-        if (theProcess->exitCode() == 0)
-            theMessage = tr("Shutdown signal sent to VM.");
-        else {
-            theMessage = tr("Problem sending shutdown signal.");
-            theIcon = QSystemTrayIcon::Critical;
-            timeout = 0;
+        // double-click powers off for 4.4
+        for (int i = 0; i < 2; i++) {
+            theProcess->start(program, arguments);
+            theProcess->waitForFinished(-1);
+            if (theProcess->exitCode() != 0) {
+                theMessage = tr("Problem sending shutdown signal.");
+                theIcon = QSystemTrayIcon::Critical;
+                timeout = 0;
+                return;
+            }
+            theProcess->waitForFinished(-1);
         }
+        theMessage = tr("Shutdown signal sent to VM.");
     }
 
     updateNotification(theTitle, theMessage, theIcon, timeout);

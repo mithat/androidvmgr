@@ -4,9 +4,9 @@ Android VM Manager
 Mithat Konar
 2013-08-26
 
-**Android VM Manager** is a desktop application designed to make launching an Android Virtual Machine and connecting it to the [Android Debug Bridge](https://developer.android.com/tools/help/adb.html) convenient. 
+**Android VM Manager** is a desktop application designed to make launching [Android-x86](http://www.android-x86.org/) Virtual Machines and connecting them to the [Android Debug Bridge](https://developer.android.com/tools/help/adb.html) convenient. 
 
-It supports [VirtualBox](https://www.virtualbox.org/) VMs and has been tested with [Android-x86](http://www.android-x86.org/) and [AndroVM](http://androvm.org/) machines on [aptosid Linux](http://www.aptosid.com/). It is currently untested on Mac OS; Windows support may follow.
+It supports [VirtualBox](https://www.virtualbox.org/) VMs and [Android-x86 4.4-r1 (KitKat-x86)](http://www.android-x86.org/releases/releasenote-4-4-r1). It has been tested on Linux. Mac OS is untested; Windows support may follow.
 
 Android VM Manager is developed with [Qt widgets](http://qt-project.org/) and is licensed under the [GPLv3](https://www.gnu.org/licenses/gpl-3.0.txt).
 
@@ -49,4 +49,6 @@ Start the virtual machine with _Machine > Start VM_.
 Connect the virtual machine to the Android Debug Bridge with _ADB > Connect VM_.
 
 #### Running apps in the VM
-Once the VM is running and connected, you should now be able to run applications in the virtual machine from your development environment. To be sure that it will launch in the VM rather than in the SDK's emulator, you might want to configure your development environment to prompt you for where to run your application on every run. In the Eclipse-based ADT, this is done via selecting _Run > Run configurations..._, clicking the "Target" tab, and selecting "Always prompt to pick device." 
+Once the VM is running and connected, you should be able to run applications in the virtual machine from your development environment.
+
+To be sure that it will launch in the VM rather than in the SDK's emulator, you might want to configure your development environment to prompt you for where to run your application on every run. In the Eclipse-based ADT, this is done via selecting _Run > Run configurations..._, clicking the "Target" tab, and selecting "Always prompt to pick device." 
