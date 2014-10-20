@@ -2,7 +2,7 @@ Android VM Manager
 ==================
 
 Mithat Konar
-2013-08-26
+2014-10-19
 
 **Android VM Manager** is a desktop application designed to make launching [Android-x86](http://www.android-x86.org/) Virtual Machines and connecting them to the [Android Debug Bridge](https://developer.android.com/tools/help/adb.html) convenient. 
 
