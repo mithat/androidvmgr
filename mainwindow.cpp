@@ -353,7 +353,7 @@ void MainWindow::appQuit()
         // prompt for ACPI shutdown of VM:
         QMessageBox::StandardButton isSend = QMessageBox::question(
                     this,tr("VM is running"),
-                    tr("Send ACPI shutdown signal to the Virtaul Machine?"),
+                    tr("Send ACPI shutdown signal to the Virtual Machine?"),
                     QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel,
                     QMessageBox::Yes);
         switch (isSend)
