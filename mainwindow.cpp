@@ -398,7 +398,7 @@ void MainWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 }
 
 // ===============
-// Service members
+// Service methods
 // ===============
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -608,7 +608,6 @@ void MainWindow::readSettingsGeometry()
 
 /**
  * @brief Configure the system tray icon.
- *
  */
 void MainWindow::configureTrayIcon()
 {
